@@ -1,0 +1,123 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>GIPHT: Conversation Made Interesting</title>
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="../css/navigation-bar.css">
+  <link rel="stylesheet" href="../css/main.css">
+  <!-- Link Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/5.7.0/firebase.js"></script>
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyALblQZ8a9r7KJm-7PlLnbIXX_xzc-QsV4",
+      authDomain: "gipht-72a41.firebaseapp.com",
+      databaseURL: "https://gipht-72a41.firebaseio.com",
+      projectId: "gipht-72a41",
+      storageBucket: "gipht-72a41.appspot.com",
+      messagingSenderId: "364158950876"
+    };
+    firebase.initializeApp(config);
+  </script>
+  <!-- Link JQuery -->
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js">
+  </script>
+  <script type = "text/javascript" src="../jquery/main.js"> </script>
+</head>
+
+<body>
+  <!-- Top Navigation Bar -->
+  <div class="topnav">
+    <a class="active" href="main.html">GIPHT</a>
+
+    <a class="log-out-bnt" style="float:right" href="../index.html">Logout</a>
+    <a style="float:right" href="#">HowTo</a>
+  </div>
+
+  <!-- Contacts and Messages Sections -->
+  <div class="contacts-messages-div">
+    <!-- Contacts/conversations Section -->
+    <span class="contacts-div section">
+      <div id="user-conversation">
+          <p class="current-user text-center">Loading UserName...</p>
+          <p class="text-primary text-center">CONVERSATIONS</p>
+      </div>
+      <div class="list-group">
+        <button type="button" class="btn btn-primary new-conversation-btn">
+          New Conversation
+        </button>
+
+        <button class="list-group-item d-flex justify-content-between align-items-center">
+          Sarthak Arorah
+          <span class="badge badge-primary badge-pill">99</span>
+        </button>
+        <button class="list-group-item d-flex justify-content-between align-items-center active">
+          Gharvhel Carre
+        </button>
+        <button class="list-group-item d-flex justify-content-between align-items-center">
+          Tay keith
+          <span class="badge badge-primary badge-pill">3</span>
+        </button>
+        <button class="list-group-item d-flex justify-content-between align-items-center">
+          Metro boomin
+          <span class="badge badge-primary badge-pill">9</span>
+        </button>
+        <button class="list-group-item d-flex justify-content-between align-items-center">
+          Dj Khaled
+          <span class="badge badge-primary badge-pill">9</span>
+        </button>
+      </div>
+
+    </span>
+
+    <!-- Messages Section -->
+    <span class="messages-div section" id="custom-scrollbar">
+      <p class="current-conversation text-primary text-center ">Gharvhel Carre</p>
+      <div class="speech-bubble-left">
+        <img src="../images/test-gif.png" alt="Test GIFs" class="message">
+      </div>
+      <div class="speech-bubble-right">
+        <img src="../images/test-gif.png" alt="Test GIFs" class="message">
+      </div>
+    </span>
+  </div>
+
+  <!-- INPUT/SEARCH SECTION -->
+  <div class="gif-search-div section">
+    <!-- Search Input -->
+    <form class="form-inline">
+      <input class="gif-search-input form-control mr-sm-2" type="search" placeholder="Search GIFs" aria-label="Search">
+      <button type="button" class="btn btn-primary">Search</button>
+    </form>
+
+    <p id="currenFilter" class="text-primary">Trending</p>
+    <!-- GIFs -->
+    <div id="gifResultDiv"></div>
+
+    <!-- Pagination -->
+    <nav aria-label="Gif navigation">
+      <ul class="pagination justify-content-center">
+        <li class="page-item disabled">
+          <a class="page-link" href="#" tabindex="-1">Previous</a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item active">
+          <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+          <a class="page-link" href="#">Next</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+</body>
+
+</html>

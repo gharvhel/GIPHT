@@ -1,0 +1,66 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>GIPHT: Conversations Made Interesting</title>
+  <link rel="stylesheet" href="css/navigation-bar.css">
+  <link rel="stylesheet" href="css/index.css">
+  <!-- Link Bootstrap -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+    crossorigin="anonymous">
+  <!-- Link Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/5.7.0/firebase.js"></script>
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyALblQZ8a9r7KJm-7PlLnbIXX_xzc-QsV4",
+      authDomain: "gipht-72a41.firebaseapp.com",
+      databaseURL: "https://gipht-72a41.firebaseio.com",
+      projectId: "gipht-72a41",
+      storageBucket: "gipht-72a41.appspot.com",
+      messagingSenderId: "364158950876"
+    };
+    firebase.initializeApp(config);
+  </script>
+  <!-- Link JQuery -->
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js">
+  </script>
+  <script type = "text/javascript" src="jquery/index.js"> </script>
+</head>
+
+<body>
+  <!-- Top Navigation Bar -->
+  <div class="topnav">
+    <a class="active" id="sign_up_tab">Sign Up</a>
+    <a id="sign_in_tab">Sign In</a>
+  </div>
+  <div class="sign-up-div section">
+    <h1>GIPHT</h1>
+    <h2>Conversations Made Interesting</h2>
+    <div class="container">
+      <p class="info" style="color:white;">Please fill in this form to create an account.</p>
+      <hr>
+      <label for="username"><b>Username</b></label>
+      <input type="text" placeholder="Enter Username" id="username" required>
+
+      <label for="psw"><b>Password</b></label>
+      <input type="password" placeholder="Enter Password" id="psw" required>
+
+      <label for="psw-repeat"><b>Repeat Password</b></label>
+      <input type="password" placeholder="Repeat Password" id="psw-repeat" required>
+
+      <label>
+        <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me (TODO: can use cookies to do this if we have time)
+      </label>
+
+      <div class="clearfix">
+        <button type="button" class="clearbtn">Clear</button>
+        <button type="submit" class="signupbtn">Sign Up</button>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
