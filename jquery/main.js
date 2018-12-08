@@ -1,4 +1,4 @@
-const apiKey = "Your API Key" 
+const apiKey = "Your API Key"
 
 // User Authentication
 firebase.auth().onAuthStateChanged(function (user) {
@@ -9,7 +9,7 @@ firebase.auth().onAuthStateChanged(function (user) {
         let photoURL = user.photoURL; // We can save profile photo for a user if we have time
 
         $(document).ready(function () {
-            function handle_sign_out_click() {
+            function handleSignOutClick() {
                 firebase.auth().signOut().then(function () {
                     console.log('Signed Out');
                 }, function (error) {
@@ -19,14 +19,13 @@ firebase.auth().onAuthStateChanged(function (user) {
 
             function loadTrending() {
                 $.ajax({
-                    url: "http://api.giphy.com/v1/gifs/trending?&api_key=" + apiKey,
+                    url: "https://api.giphy.com/v1/gifs/trending?&api_key=" + apiKey,
                     type: "GET",
                     beforeSend: function () {
-                       console.log("Loading")
+                        console.log("Loading Trending")
                     },
                     complete: function (data) {
-                        
-                            
+
                     },
                     success: function (data) {
                         console.log(data)
@@ -36,16 +35,23 @@ firebase.auth().onAuthStateChanged(function (user) {
                             imgUrl = results[i].images.fixed_height.url;
                             $("#gifResultDiv").append(`<img class="gifThumbnail" src="${imgUrl}">`);
                         }
-                        // <iframe src="https://giphy.com/embed/3o6YfYvk4uB415sOTm"></iframe>
-                        //gifResultDiv
                     }
                 });
-
             }
 
-            loadTrending()
-            $(".current-user").text(userName + "'s")
-            $(".log-out-bnt").on("click", handle_sign_out_click);
+            function handleNewConversationClick() {
+                $("#newConversationWindow").css("display", "block");
+            }
+
+            function handleCloseClick() {
+                $("#newConversationWindow").css("display", "none");
+            }
+
+            $(".closeBtn").on("click", handleCloseClick);
+            $("#newConversationBtn").on("click", handleNewConversationClick);
+            $(".current-user").text(userName + "'s");
+            $(".log-out-bnt").on("click", handleSignOutClick);
+            loadTrending();
         })
 
     } else {

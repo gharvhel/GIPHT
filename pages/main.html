@@ -28,7 +28,7 @@
   <!-- Link JQuery -->
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js">
   </script>
-  <script type = "text/javascript" src="../jquery/main.js"> </script>
+  <script type="text/javascript" src="../jquery/main.js"> </script>
 </head>
 
 <body>
@@ -45,11 +45,11 @@
     <!-- Contacts/conversations Section -->
     <span class="contacts-div section">
       <div id="user-conversation">
-          <p class="current-user text-center">Loading UserName...</p>
-          <p class="text-primary text-center">CONVERSATIONS</p>
+        <p class="current-user text-center">Loading UserName...</p>
+        <p class="text-primary text-center">CONVERSATIONS</p>
       </div>
       <div class="list-group">
-        <button type="button" class="btn btn-primary new-conversation-btn">
+        <button id="newConversationBtn" type="button" class="btn btn-primary">
           New Conversation
         </button>
 
@@ -116,6 +116,26 @@
         </li>
       </ul>
     </nav>
+  </div>
+
+  <!-- New Conversation Windows -->
+  <!-- The Modal -->
+  <div id="newConversationWindow" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="closeBtn">&times;</span>
+        <h2>Start New Conversations</h2>
+      </div>
+      <div class="modal-body">
+          <input class="gif-search-input form-control mr-sm-2" type="text" placeholder="Enter existing User...">
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-primary">Create</button>
+      </div>
+    </div>
+
   </div>
 
 </body>
