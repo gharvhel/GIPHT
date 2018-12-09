@@ -15,7 +15,7 @@
   <script src="https://www.gstatic.com/firebasejs/5.7.0/firebase.js"></script>
   <script>
     // Initialize Firebase
-    var config = {
+    let config = {
       apiKey: "AIzaSyALblQZ8a9r7KJm-7PlLnbIXX_xzc-QsV4",
       authDomain: "gipht-72a41.firebaseapp.com",
       databaseURL: "https://gipht-72a41.firebaseio.com",
@@ -48,43 +48,19 @@
         <p class="current-user text-center">Loading UserName...</p>
         <p class="text-primary text-center">CONVERSATIONS</p>
       </div>
-      <div class="list-group">
+      <div id="conversationList" class="list-group">
         <button id="newConversationBtn" type="button" class="btn btn-primary">
           New Conversation
         </button>
 
-        <button class="list-group-item d-flex justify-content-between align-items-center">
-          Sarthak Arorah
-          <span class="badge badge-primary badge-pill">99</span>
-        </button>
-        <button class="list-group-item d-flex justify-content-between align-items-center active">
-          Gharvhel Carre
-        </button>
-        <button class="list-group-item d-flex justify-content-between align-items-center">
-          Tay keith
-          <span class="badge badge-primary badge-pill">3</span>
-        </button>
-        <button class="list-group-item d-flex justify-content-between align-items-center">
-          Metro boomin
-          <span class="badge badge-primary badge-pill">9</span>
-        </button>
-        <button class="list-group-item d-flex justify-content-between align-items-center">
-          Dj Khaled
-          <span class="badge badge-primary badge-pill">9</span>
-        </button>
       </div>
 
     </span>
 
     <!-- Messages Section -->
     <span class="messages-div section" id="custom-scrollbar">
-      <p class="current-conversation text-primary text-center ">Gharvhel Carre</p>
-      <div class="speech-bubble-left">
-        <img src="../images/test-gif.png" alt="Test GIFs" class="message">
-      </div>
-      <div class="speech-bubble-right">
-        <img src="../images/test-gif.png" alt="Test GIFs" class="message">
-      </div>
+      <p id="currentConversationOther" class="text-primary text-center ">Ongoing conversations will appear here</p>
+     
     </span>
   </div>
 
@@ -132,7 +108,7 @@
           <input class="gif-search-input form-control mr-sm-2" type="text" placeholder="Enter existing User...">
       </div>
       <div class="modal-footer">
-          <button type="button" class="btn btn-primary">Create</button>
+          <button type="button" id="createConversationBtn" class="btn btn-primary">Create</button>
       </div>
     </div>
 

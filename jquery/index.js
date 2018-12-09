@@ -1,15 +1,26 @@
+
 // User Authentication
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
         // User is signed in.
-        var displayName = user.displayName;
-        var email = user.email;
-        var emailVerified = user.emailVerified;
-        var photoURL = user.photoURL;
-        var isAnonymous = user.isAnonymous;
-        var uid = user.uid;
-        var providerData = user.providerData;
-        window.location = "pages/main.html";
+        let email = user.email;
+        let userName = email.split("@")[0]
+        let photoURL = user.photoURL; // We can save profile photo for a user if we have time
+
+        // Get a reference to the database service
+        let db = firebase.database();
+        let userListRef = db.ref(`userList/${userName}`)
+        userListRef.once('value', snapshot => {
+            if (!snapshot.val()) {
+                // User does not exist, create user entry
+                userListRef.set({
+                    "conversations" : ["null"],
+                    "lastSpoken": "null"
+                });
+            }
+        }).then(()=> {
+            window.location = "./pages/main.html";
+        });
     } else {
         // User is signed out.
     }
@@ -77,7 +88,7 @@ $(document).ready(function () {
     function handle_sign_up_tab_click() {
         $("#sign_up_tab").addClass('active');
         $("#sign_in_tab").removeClass('active');
-        $("info").text("Please fill in this form to create an account.")
+        $(".info").text("Please fill in this form to create an account.")
         $("#psw-repeat").show();
         $("label[for='psw-repeat']" ).show();
         $(".signupbtn").text("Sign Up");
