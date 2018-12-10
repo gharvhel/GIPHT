@@ -1,5 +1,5 @@
 
-const apiKey = "You KEY"
+const apiKey = "Your Key"
 // User Authentication
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
@@ -9,6 +9,84 @@ firebase.auth().onAuthStateChanged(function (user) {
         let photoURL = user.photoURL; // We can save profile photo for a user if we have time
 
         $(document).ready(function () {
+            $("#trendringTab").on("click", handleTrendingTabClick);
+            $("#searchTab").on("click", handleSearchTabClick);
+            $("#favoritesTab").on("click", handleFavoritesTabClick);
+            $("#replyTab").on("click", handleReplyTabClick);
+            $("#createConversationBtn").on("click", handleCreateConversationBtnClick)
+            $(".closeBtn").on("click", handleCloseClick);
+            $("#newConversationBtn").on("click", handleNewConversationClick);
+            $("#searchBtn").on("click", handleSearchBtnClick);
+            $(".current-user").text(userName + "'s");
+            $(".log-out-bnt").on("click", handleSignOutClick);
+            loadConversations();
+            loadTrending();
+
+
+            function updateScroll() {
+                let element = "#messagesSection";
+                $(element).animate({ scrollTop: $(element)[0].scrollHeight + 500 }, 1000);
+            }
+
+            function handleSearchBtnClick() {
+                let searchStr = $("#searchInput").val()
+                console.log(searchStr)
+                $.ajax({
+                    url: `https://api.giphy.com/v1/gifs/search?q=${searchStr}&api_key=${apiKey}&limit=5`,
+                    type: "GET",
+                    beforeSend: function () {
+                        console.log("Loading Trending")
+                    },
+                    complete: function (data) {
+
+                    },
+                    success: function (data) {
+                        let results = data.data
+                        $("#searchResults").html('');
+                        for (let i = 0; i < results.length; i += 1) {
+                            imgUrl = results[i].images.fixed_height.url;
+                            $("#searchResults").append(`<div id=searchResultsImg-${i} class="gifThumbnailContainer" ><img class="gif" src="${imgUrl}"><div id=searchResultsBtn-${i} class="sendBtn"><button type="button" class="btn btn-primary">Send</button></div></div>`);
+                            $(`#searchResultsBtn-${i}`).on("click", handleSendBtnClick);
+                        }
+                    }
+                });
+            }
+
+            function toggleSelected(elem) {
+                let tabs = $("#optionsBar").children();
+                for (let i = 0; i < tabs.length; i += 1) {
+                    div = tabs[i]
+                    if (div.id != elem.id) {
+                        $(div).removeClass("selected");
+                    }
+                }
+                $(elem).addClass("selected")
+            }
+            function handleTrendingTabClick() {
+                toggleSelected(this);
+                $("#searchSection").hide()
+                $("#searchResults").hide()
+                $("#trendingResults").show()
+            }
+
+            function handleSearchTabClick() {
+                toggleSelected(this);
+                $(this).addClass("selected")
+                $("#searchSection").show()
+                $("#searchResults").show()
+                $("#trendingResults").hide()
+            }
+
+            function handleFavoritesTabClick() {
+                toggleSelected(this);
+                $("#searchSection").hide()
+            }
+
+            function handleReplyTabClick() {
+                toggleSelected(this);
+                $("#searchSection").hide()
+            }
+
             function handleSignOutClick() {
                 firebase.auth().signOut().then(function () {
                     console.log('Signed Out');
@@ -45,7 +123,7 @@ firebase.auth().onAuthStateChanged(function (user) {
                     let conversationRef = db.ref(`messages/${conversationRefStr}`);
                     let imgUrl = this.previousSibling.src;
                     conversationRef.once('value', snapshot => {
-                        console.log(snapshot.val());
+                        // console.log(snapshot.val());
                         msgList = snapshot.val()
                         conversationRef.child(`${msgList.length}`).set({
                             "sender": userName,
@@ -108,25 +186,29 @@ firebase.auth().onAuthStateChanged(function (user) {
                     }
 
                     let conversationRef = db.ref(`messages/${conversationRefStr}`);
-                    conversationRef.once('value', snapshot => {
+
+                    // LOADS and sets listener
+                    conversationRef.on('child_added', snapshot => {
+                        console.log(snapshot.val())
+
                         if (snapshot.val()) {
                             messageList = snapshot.val();
-                            messageList.forEach((msg) => {
-                                if (msg.sender == userName) {
-                                    $(".messages-div").append(`
+                            msg = snapshot.val();
+                            if (msg.sender == userName) {
+                                $(".messages-div").append(`
                                     <div class="speech-bubble-right">
                                         <img src="${msg.url}" class="message">
                                     </div>
                                     `);
-                                } else {
-                                    $(".messages-div").append(`
+                            } else {
+                                $(".messages-div").append(`
                                     <div class="speech-bubble-left">
                                         <img src="${msg.url}" class="message">
                                     </div>
                                     `);
-                                }
-                            })
+                            }
                         }
+                        updateScroll();
                     });
                 });
 
@@ -147,8 +229,8 @@ firebase.auth().onAuthStateChanged(function (user) {
                         let results = data.data
                         for (let i = 0; i < results.length; i += 1) {
                             imgUrl = results[i].images.fixed_height.url;
-                            $("#gifResultDiv").append(`<div id=img-${i} class="gifThumbnailContainer" ><img class="gif" src="${imgUrl}"><div id=btn-${i} class="sendBtn"><button type="button" class="btn btn-primary">Send</button></div></div>`);
-                            $(`#btn-${i}`).on("click", handleSendBtnClick);
+                            $("#trendingResults").append(`<div id=trendingResultsImg-${i} class="gifThumbnailContainer" ><img class="gif" src="${imgUrl}"><div id=trendingResultsBtn-${i} class="sendBtn"><button type="button" class="btn btn-primary">Send</button></div></div>`);
+                            $(`#trendingResultsBtn-${i}`).on("click", handleSendBtnClick);
                         }
                     }
                 });
@@ -186,13 +268,7 @@ firebase.auth().onAuthStateChanged(function (user) {
 
 
 
-            $("#createConversationBtn").on("click", handleCreateConversationBtnClick)
-            $(".closeBtn").on("click", handleCloseClick);
-            $("#newConversationBtn").on("click", handleNewConversationClick);
-            $(".current-user").text(userName + "'s");
-            $(".log-out-bnt").on("click", handleSignOutClick);
-            loadConversations();
-            loadTrending();
+
         })
 
     } else {

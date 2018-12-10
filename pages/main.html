@@ -35,7 +35,6 @@
   <!-- Top Navigation Bar -->
   <div class="topnav">
     <a class="active" href="main.html">GIPHT</a>
-
     <a class="log-out-bnt" style="float:right" href="../index.html">Logout</a>
     <a style="float:right" href="#">HowTo</a>
   </div>
@@ -58,23 +57,42 @@
     </span>
 
     <!-- Messages Section -->
-    <span class="messages-div section" id="custom-scrollbar">
+    <span id="messagesSection" class="messages-div section custom-scrollbar" >
       <p id="currentConversationOther" class="text-primary text-center ">Ongoing conversations will appear here</p>
-     
+
     </span>
   </div>
 
   <!-- INPUT/SEARCH SECTION -->
   <div class="gif-search-div section">
-    <!-- Search Input -->
-    <form class="form-inline">
-      <input class="gif-search-input form-control mr-sm-2" type="search" placeholder="Search GIFs" aria-label="Search">
-      <button type="button" class="btn btn-primary">Search</button>
-    </form>
 
-    <p id="currenFilter" class="text-primary">Trending</p>
+    <!-- OPTIONS BAR -->
+    <div id="optionsBar">
+      <span id="trendringTab" class="optionsTab selected">Trending</span>
+      <span id="searchTab" class="optionsTab">Search</span>
+      <span id="favoritesTab" class="optionsTab">Favorites</span>
+      <span id="replyTab" class="optionsTab">Suggested Reply</span>
+    </div>
+
+    <!-- Search Input -->
+    <div id="searchSection">
+        <form class="form-inline">
+            <input id="searchInput" class="gif-search-input form-control mr-sm-2" type="search" placeholder="Search GIFs" aria-label="Search">
+            <button id="searchBtn" type="button" class="btn btn-primary mr-sm-2">Search</button>
+            <button type="button" class="btn btn-primary">Toggle More Options</button>
+          </form>
+    </div>
+
+
     <!-- GIFs -->
-    <div id="gifResultDiv"></div>
+    <div id="gifResultDiv">
+      <div id="trendingResults" class="results"></div>
+      <div id="searchResults" class="results" style="display:none;">
+          <div class="alert alert-primary" role="alert">
+              Search results will appear here...
+          </div>
+      </div>
+    </div>
 
     <!-- Pagination -->
     <nav aria-label="Gif navigation">
@@ -82,8 +100,8 @@
         <li class="page-item disabled">
           <a class="page-link" href="#" tabindex="-1">Previous</a>
         </li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item active">
+        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+        <li class="page-item">
           <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
         </li>
         <li class="page-item"><a class="page-link" href="#">3</a></li>
@@ -105,10 +123,10 @@
         <h2>Start New Conversations</h2>
       </div>
       <div class="modal-body">
-          <input class="gif-search-input form-control mr-sm-2" type="text" placeholder="Enter existing User...">
+        <input class="gif-search-input form-control mr-sm-2" type="text" placeholder="Enter existing User...">
       </div>
       <div class="modal-footer">
-          <button type="button" id="createConversationBtn" class="btn btn-primary">Create</button>
+        <button type="button" id="createConversationBtn" class="btn btn-primary">Create</button>
       </div>
     </div>
 
