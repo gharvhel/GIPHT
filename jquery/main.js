@@ -1,5 +1,4 @@
-
-const apiKey = "You API KEY"
+const apiKey = "Your Key"
 // User Authentication
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
@@ -233,10 +232,13 @@ firebase.auth().onAuthStateChanged(function (user) {
                 }).then(() => {
                     // get list of users you speak with
                     let userConversationsRef = db.ref(`userList/${userName}/conversations`)
+                    $("#conversationList").html("");
+
+                    // LOADS and sets listener
+                    // userConversationsRef.on('child_added', snapshot => {
                     userConversationsRef.once('value', snapshot => {
                         if (snapshot.val()) {
                             let conversationList = snapshot.val()
-                            console.log(conversationList)
                             if (conversationList.length == 1) {
                                 if (lastSpoken != "null") {
                                     console.log("HERE LOOPING");
@@ -250,29 +252,34 @@ firebase.auth().onAuthStateChanged(function (user) {
                                 }
 
                             } else {
-                                console.log("HERE");
-                                // remove null from list by shifting 1 up
-                                console.log(conversationList)
-                                conversationList.shift();
-                                console.log(conversationList)
-                                // reset conversation list div content first
-                                $("#conversationList").html("");
-                                conversationList.forEach((user) => {
+
+                                userConversationsRef.on('child_added', snapshot => {
+
+                                    conversationListItem = snapshot.val();
+                                    // // remove null from list by shifting 1 up
+                                    // conversationList.shift();
+                                    // reset conversation list div content first
+                                    let user = conversationListItem;
+                                    console.log(user)
+
                                     // Append user as active user
-                                    if (user === lastSpoken) {
-                                        $("#conversationList").append(`
-                                        <button class="conversationItem list-group-item d-flex justify-content-between align-items-center active">
-                                            ${user}
-                                        </button>`
-                                        );
-                                    } else {
-                                        // Append user as non active user
-                                        $("#conversationList").append(`
-                                        <button class="conversationItem list-group-item d-flex justify-content-between align-items-center">
-                                            ${user}
-                                        </button>`
-                                        );
+                                    if (user != "null") {
+                                        if (user === lastSpoken) {
+                                            $("#conversationList").append(`
+                                            <button class="conversationItem list-group-item d-flex justify-content-between align-items-center active">
+                                                ${user}
+                                            </button>`
+                                            );
+                                        } else {
+                                            // Append user as non active user
+                                            $("#conversationList").append(`
+                                            <button class="conversationItem list-group-item d-flex justify-content-between align-items-center">
+                                                ${user}
+                                            </button>`
+                                            );
+                                        }
                                     }
+                                    
 
                                     $(".conversationItem").on("click", handleConversationItemClick);
 
@@ -298,9 +305,7 @@ firebase.auth().onAuthStateChanged(function (user) {
                         let conversationRef = db.ref(`messages/${conversationRefStr}`);
                         // reset message div content first
                         $(".messages-div").html(`
-                            <div id="currentConversationOther" class="alert alert-primary text-center" role="alert">
-                                ${lastSpoken}
-                            </div>
+                            
                         `);
                         // LOADS and sets listener
                         conversationRef.on('child_added', snapshot => {

@@ -3,7 +3,8 @@
     display:flex;
 	max-height:50%;
 	height:50%;
-    padding: 0px;
+	padding: 0px;
+	margin-right: 5px;
 }
 .contacts-div {
     height: auto;
@@ -14,21 +15,7 @@
 	overflow:auto
 }
 
-.messages-div{
-	height: auto;
-	width: 77%;
-	min-width: 40%;
-	float:right;
-	margin: 5px 5px 0px 5px;
-	padding: 5px;
-	resize: both;
-	overflow-y:auto;
-	background: rgb(236, 235, 235);
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-	/* margin-left: auto;
-	margin-right: auto; */
-	/* max-width: 700px !important; */
-}
+
 
 /* .messages-div::-webkit-resizer {
     background-color: blue;
@@ -347,3 +334,36 @@
   #userList li div button {
 	float:right;
   }
+
+  #currentConversationOther {
+	  width: 100%;
+	  margin-bottom: 5px !important;
+  }
+
+  #messagesSectionContainer{
+	  /* background-color: red; */
+	  width: 98%;
+	  height: auto;
+
+	  margin-top: 5px;
+	  z-index: 4;
+	  height: auto;
+	  resize: both;
+	  
+
+
+  }
+
+  .messages-div{
+	overflow-y:auto;
+	resize: both;
+	max-height: 88.2%;
+	width: auto;
+	min-width: 40%;
+	display: block;
+	/* float:right; */
+	margin: auto !important;
+	padding: 5px;
+	background: rgb(236, 235, 235);
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
