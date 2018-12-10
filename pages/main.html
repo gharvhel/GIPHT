@@ -47,18 +47,19 @@
         <p class="current-user text-center">Loading UserName...</p>
         <p class="text-primary text-center">CONVERSATIONS</p>
       </div>
+      <button id="newConversationBtn" type="button" class="btn btn-primary">
+        New Conversation
+      </button>
       <div id="conversationList" class="list-group">
-        <button id="newConversationBtn" type="button" class="btn btn-primary">
-          New Conversation
-        </button>
-
       </div>
 
     </span>
 
     <!-- Messages Section -->
-    <span id="messagesSection" class="messages-div section custom-scrollbar" >
-      <p id="currentConversationOther" class="text-primary text-center ">Ongoing conversations will appear here</p>
+    <span id="messagesSection" class="messages-div section custom-scrollbar">
+      <div id="currentConversationOther" class="alert alert-primary text-center" role="alert">
+        Ongoing conversations will appear here
+      </div>
 
     </span>
   </div>
@@ -76,21 +77,22 @@
 
     <!-- Search Input -->
     <div id="searchSection">
-        <form class="form-inline">
-            <input id="searchInput" class="gif-search-input form-control mr-sm-2" type="search" placeholder="Search GIFs" aria-label="Search">
-            <button id="searchBtn" type="button" class="btn btn-primary mr-sm-2">Search</button>
-            <button type="button" class="btn btn-primary">Toggle More Options</button>
-          </form>
+      <form class="form-inline">
+        <input id="searchInput" class="gif-search-input form-control mr-sm-2" type="search" placeholder="Search GIFs"
+          aria-label="Search">
+        <button id="searchBtn" type="button" class="btn btn-primary mr-sm-2">Search</button>
+        <button type="button" class="btn btn-primary">Toggle More Options</button>
+      </form>
     </div>
 
 
     <!-- GIFs -->
     <div id="gifResultDiv">
-      <div id="trendingResults" class="results"></div>
-      <div id="searchResults" class="results" style="display:none;">
-          <div class="alert alert-primary" role="alert">
-              Search results will appear here...
-          </div>
+      <div id="trendingResults" class="results custom-scrollbar"></div>
+      <div id="searchResults" class="results custom-scrollbar" style="display:none;">
+        <div class="alert alert-primary" role="alert">
+          Search results will appear here...
+        </div>
       </div>
     </div>
 
@@ -123,10 +125,15 @@
         <h2>Start New Conversations</h2>
       </div>
       <div class="modal-body">
-        <input class="gif-search-input form-control mr-sm-2" type="text" placeholder="Enter existing User...">
+        <input type="text" id="searchUsersInput" placeholder="Search for users..">
+        <div id="modalBodyNoUsers" class="alert alert-primary" role="alert" style="display:none">
+            No users found by that name
+          </div>
       </div>
       <div class="modal-footer">
-        <button type="button" id="createConversationBtn" class="btn btn-primary">Create</button>
+        <ul id="userList">
+          
+        </ul>
       </div>
     </div>
 

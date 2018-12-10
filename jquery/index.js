@@ -28,12 +28,14 @@ firebase.auth().onAuthStateChanged(function (user) {
 
 $(document).ready(function () {
     // Validate sign-up form
-    function validate_form(email, psw, psw_repeat) {
-        let valid = false
-        if (psw === psw_repeat) {
-            valid = true;
-        } else {
+    function validate_form(username, psw, psw_repeat) {
+        let valid = true;
+        if (psw != psw_repeat) {
+            valid = false;
             alert("Passwords do not match.")
+        } else if (username == "null") {
+            valid = false;
+            alert("Username cannot be null.")
         }
         return valid;
     }
@@ -45,7 +47,7 @@ $(document).ready(function () {
         let email = username + "@gipht.com"
         let psw = $("#psw").val().trim();
         let psw_repeat = $("#psw-repeat").val().trim();
-        if (validate_form(email, psw, psw_repeat)) {
+        if (validate_form(username, psw, psw_repeat)) {
             // Sign in with email and pass.
             firebase.auth().createUserWithEmailAndPassword(email, psw).catch(function (error) {
                 // Handle Errors here.

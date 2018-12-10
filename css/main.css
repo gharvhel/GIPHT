@@ -16,18 +16,18 @@
 
 .messages-div{
 	height: auto;
-	/* width: 77%; */
-	/* min-width: 40%; */
+	width: 77%;
+	min-width: 40%;
 	float:right;
-    margin: 5px auto 0px auto;
+	margin: 5px 5px 0px 5px;
 	padding: 5px;
-	/* resize: both; */
+	resize: both;
 	overflow-y:auto;
 	background: rgb(236, 235, 235);
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-	/* margin-left: auto; */
-	/* margin-right: auto; */
-	max-width: 700px !important;
+	/* margin-left: auto;
+	margin-right: auto; */
+	/* max-width: 700px !important; */
 }
 
 /* .messages-div::-webkit-resizer {
@@ -54,12 +54,16 @@
 }
 
 #newConversationBtn {
-    margin-bottom: 5px;
+	margin-bottom: 5px;
+	width: 100%;
 }
-
+.speech-bubble-container {
+	width: 100%;
+	overflow:auto; 
+}
 .speech-bubble-left {
 	float: left;
-	display: block;
+	/* display: block; */
 	position: relative;
 	background: #F0EFEF;
     border-radius: .4em;
@@ -73,7 +77,7 @@
 
 .speech-bubble-right {
 	position: relative;
-	display: block;
+	/* display: block; */
 	background: #117AFF;
     border-radius: .4em;
 	margin: 20px;
@@ -179,7 +183,7 @@
 .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    z-index: 5; /* Sit on top */
     padding-top: 100px; /* Location of the box */
     left: 0;
     top: 0;
@@ -237,12 +241,16 @@
     color: white;
 }
 
-.modal-body {padding: 2px 16px;}
+.modal-body {
+	padding: 2px 16px;
+}
 
 .modal-footer {
-    padding: 5px;
+	padding: 5px;
     background-color: #16171A;
-    color: white;
+	color: white;
+	/* overflow-y:auto; */
+
 }
 
 
@@ -302,3 +310,40 @@
 	display:none;
 }
 
+#searchUsersInput {
+	background-position: 10px 12px; /* Position the search icon */
+	background-repeat: no-repeat; /* Do not repeat the icon image */
+	width: 100%; /* Full-width */
+	font-size: 16px; /* Increase font-size */
+	padding: 12px 20px 12px 40px; /* Add some padding */
+	border: 1px solid #ddd; /* Add a grey border */
+	margin-bottom: 12px; /* Add some space below the input */
+  }
+  
+  #userList {
+	/* Remove default list styling */
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+	width: 100%;
+  }
+  
+  #userList li div {
+	border: 1px solid #ddd; /* Add a border to all links */
+	margin-top: -1px; /* Prevent double borders */
+	background-color: #f6f6f6; /* Grey background color */
+	padding: 12px; /* Add some padding */
+	text-decoration: none; /* Remove default text underline */
+	font-size: 18px; /* Increase the font-size */
+	color: black; /* Add a black text color */
+	display: block; /* Make it into a block element to fill the whole list */
+  }
+  
+  #userList li div:hover:not(.header) {
+	background-color: #16171A; /* Add a hover effect to all links, except for headers */
+	color: white;
+  }
+
+  #userList li div button {
+	float:right;
+  }

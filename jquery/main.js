@@ -1,5 +1,5 @@
 
-const apiKey = "Your Key"
+const apiKey = "You API KEY"
 // User Authentication
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
@@ -19,18 +19,103 @@ firebase.auth().onAuthStateChanged(function (user) {
             $("#searchBtn").on("click", handleSearchBtnClick);
             $(".current-user").text(userName + "'s");
             $(".log-out-bnt").on("click", handleSignOutClick);
+            $("#searchUsersInput").keyup(filterUsers)
             loadConversations();
             loadTrending();
 
+            function handleStartConversationBtnClick() {
+                // set last spoken to user clicked on
+                let userClicked = this.id.split('-')[1];
+                let db = firebase.database();
+                let lastSpokenRef = db.ref(`userList/${userName}/lastSpoken`);
+                lastSpokenRef.once('value', () => {
+                    lastSpokenRef.set(userClicked);
+                }).then(() => {
+                    //add clicked user to list of ongoing conversations
+                    // get list of users you speak with
+                    let userConversationsRef = db.ref(`userList/${userName}/conversations`)
+                    userConversationsRef.once('value', snapshot => {
+                        if (snapshot.val()) {
+                            userConversationsRef.child(`${snapshot.val().length}`).set(userClicked)
+                        }
+                    })
+
+                    let userConversationsRef2 = db.ref(`userList/${userClicked}/conversations`)
+                    userConversationsRef2.once('value', snapshot => {
+                        if (snapshot.val()) {
+                            userConversationsRef2.child(`${snapshot.val().length}`).set(userName)
+                        }
+                    })
+
+
+                }).then(() => {
+                    // Start empty conversation with default hello gif
+                    let conversationRefStr = "";
+                    let compare = userName.localeCompare(userClicked);
+                    if (compare == 0) {
+                        // strings are the same
+                        console.log("ERROR: Current user and user last spoken to are the same")
+                    } else if (compare == -1) {
+                        conversationRefStr = `${userName}+${userClicked}`;
+                    } else {
+                        conversationRefStr = `${userClicked}+${userName}`;
+                    }
+
+                    let conversationRef = db.ref(`messages/${conversationRefStr}`);
+                    conversationRef.set([{ "sender": userName, "url": "https://media1.giphy.com/media/dzaUX7CAG0Ihi/200.gif" }]);
+                }).then(() => {
+                    loadConversations();
+                    handleCloseClick();
+                })
+
+
+            }
+
+            function filterUsers() {
+                // Declare variables
+                let input, filter, ul, li, a, i, txtValue;
+                input = document.getElementById('searchUsersInput');
+                filter = input.value.toUpperCase();
+                ul = document.getElementById("userList");
+                li = ul.getElementsByTagName('li');
+
+                let count = 0
+                // Loop through all list items, and hide those who don't match the search query
+                for (i = 0; i < li.length; i++) {
+                    a = li[i].getElementsByTagName("div")[0];
+                    txtValue = a.textContent || a.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        li[i].style.display = "";
+                    } else {
+                        li[i].style.display = "none";
+                        count += 1
+                    }
+                }
+                if (count >= li.length) {
+                    $("#modalBodyNoUsers").show();
+                } else {
+                    $("#modalBodyNoUsers").hide();
+                }
+            }
 
             function updateScroll() {
                 let element = "#messagesSection";
-                $(element).animate({ scrollTop: $(element)[0].scrollHeight + 500 }, 1000);
+                $(element).animate({ scrollTop: $(element)[0].scrollHeight }, 100);
+            }
+
+            function handleConversationItemClick() {
+                let userClicked = this.innerHTML.trim();
+                let db = firebase.database();
+                let lastSpokenRef = db.ref(`userList/${userName}/lastSpoken`);
+                lastSpokenRef.once('value', () => {
+                    lastSpokenRef.set(userClicked);
+                }).then(() => {
+                    loadConversations();
+                })
             }
 
             function handleSearchBtnClick() {
                 let searchStr = $("#searchInput").val()
-                console.log(searchStr)
                 $.ajax({
                     url: `https://api.giphy.com/v1/gifs/search?q=${searchStr}&api_key=${apiKey}&limit=5`,
                     type: "GET",
@@ -89,14 +174,12 @@ firebase.auth().onAuthStateChanged(function (user) {
 
             function handleSignOutClick() {
                 firebase.auth().signOut().then(function () {
-                    console.log('Signed Out');
                 }, function (error) {
                     console.error('Sign Out Error', error);
                 });
             }
 
             function handleSendBtnClick() {
-                console.log(this.id);
                 // Get a reference to the database service
                 let db = firebase.database();
                 let lastSpokenRef = db.ref(`userList/${userName}/lastSpoken`);
@@ -123,7 +206,6 @@ firebase.auth().onAuthStateChanged(function (user) {
                     let conversationRef = db.ref(`messages/${conversationRefStr}`);
                     let imgUrl = this.previousSibling.src;
                     conversationRef.once('value', snapshot => {
-                        // console.log(snapshot.val());
                         msgList = snapshot.val()
                         conversationRef.child(`${msgList.length}`).set({
                             "sender": userName,
@@ -144,72 +226,109 @@ firebase.auth().onAuthStateChanged(function (user) {
                 lastSpokenRef.once('value', snapshot => {
                     if (snapshot.val()) {
                         lastSpoken = snapshot.val();
-                        $("#currentConversationOther").text(lastSpoken)
+                        if (lastSpoken != "null") {
+                            $("#currentConversationOther").text(lastSpoken);
+                        }
                     }
                 }).then(() => {
                     // get list of users you speak with
                     let userConversationsRef = db.ref(`userList/${userName}/conversations`)
                     userConversationsRef.once('value', snapshot => {
                         if (snapshot.val()) {
-                            let coversationList = snapshot.val()
-                            coversationList.forEach((user) => {
-                                // Append user as active user
-                                if (user === lastSpoken) {
-                                    $("#conversationList").append(`
-                                    <button class="list-group-item d-flex justify-content-between align-items-center active">
-                                        ${user}
-                                    </button>`
-                                    );
+                            let conversationList = snapshot.val()
+                            console.log(conversationList)
+                            if (conversationList.length == 1) {
+                                if (lastSpoken != "null") {
+                                    console.log("HERE LOOPING");
+                                    loadConversations();
                                 } else {
-                                    // Append user as non active user
-                                    $("#conversationList").append(`
-                                    <button class="list-group-item d-flex justify-content-between align-items-center">
-                                        ${user}
-                                    </button>`
-                                    );
+                                    console.log(lastSpoken);
+                                    $("#conversationList").html(`
+                                <div class="alert alert-primary" role="alert">
+                                    No ongoing conversations Yet!
+                                </div>`);
                                 }
 
-                            })
+                            } else {
+                                console.log("HERE");
+                                // remove null from list by shifting 1 up
+                                console.log(conversationList)
+                                conversationList.shift();
+                                console.log(conversationList)
+                                // reset conversation list div content first
+                                $("#conversationList").html("");
+                                conversationList.forEach((user) => {
+                                    // Append user as active user
+                                    if (user === lastSpoken) {
+                                        $("#conversationList").append(`
+                                        <button class="conversationItem list-group-item d-flex justify-content-between align-items-center active">
+                                            ${user}
+                                        </button>`
+                                        );
+                                    } else {
+                                        // Append user as non active user
+                                        $("#conversationList").append(`
+                                        <button class="conversationItem list-group-item d-flex justify-content-between align-items-center">
+                                            ${user}
+                                        </button>`
+                                        );
+                                    }
+
+                                    $(".conversationItem").on("click", handleConversationItemClick);
+
+                                })
+                            }
+
                         }
                     })
                 }).then(() => {
-                    // Load Messages
-                    let conversationRefStr = "";
-                    let compare = userName.localeCompare(lastSpoken);
-                    if (compare == 0) {
-                        // strings are the same
-                        console.log("ERROR: Current user and user last spoken to are the same")
-                    } else if (compare == -1) {
-                        conversationRefStr = `${userName}+${lastSpoken}`;
-                    } else {
-                        conversationRefStr = `${lastSpoken}+${userName}`;
-                    }
-
-                    let conversationRef = db.ref(`messages/${conversationRefStr}`);
-
-                    // LOADS and sets listener
-                    conversationRef.on('child_added', snapshot => {
-                        console.log(snapshot.val())
-
-                        if (snapshot.val()) {
-                            messageList = snapshot.val();
-                            msg = snapshot.val();
-                            if (msg.sender == userName) {
-                                $(".messages-div").append(`
-                                    <div class="speech-bubble-right">
-                                        <img src="${msg.url}" class="message">
-                                    </div>
-                                    `);
-                            } else {
-                                $(".messages-div").append(`
-                                    <div class="speech-bubble-left">
-                                        <img src="${msg.url}" class="message">
-                                    </div>
-                                    `);
-                            }
+                    if (lastSpoken != "null") {
+                        // Load Messages
+                        let conversationRefStr = "";
+                        let compare = userName.localeCompare(lastSpoken);
+                        if (compare == 0) {
+                            // strings are the same
+                            console.log("ERROR: Current user and user last spoken to are the same")
+                        } else if (compare == -1) {
+                            conversationRefStr = `${userName}+${lastSpoken}`;
+                        } else {
+                            conversationRefStr = `${lastSpoken}+${userName}`;
                         }
-                        updateScroll();
-                    });
+
+                        let conversationRef = db.ref(`messages/${conversationRefStr}`);
+                        // reset message div content first
+                        $(".messages-div").html(`
+                            <div id="currentConversationOther" class="alert alert-primary text-center" role="alert">
+                                ${lastSpoken}
+                            </div>
+                        `);
+                        // LOADS and sets listener
+                        conversationRef.on('child_added', snapshot => {
+                            if (snapshot.val()) {
+                                messageList = snapshot.val();
+                                msg = snapshot.val();
+                                if (msg.sender == userName) {
+                                    $(".messages-div").append(`
+                                    <div class="speech-bubble-container">
+                                        <div class="speech-bubble-right">
+                                            <img src="${msg.url}" class="message">
+                                        </div>
+                                    </div>
+                                    `);
+                                } else {
+                                    $(".messages-div").append(`
+                                    <div class="speech-bubble-container">
+                                        <div class="speech-bubble-left">
+                                            <img src="${msg.url}" class="message">
+                                        </div>
+                                    </div>
+                                    `);
+                                }
+                            }
+                            updateScroll();
+
+                        });
+                    }
                 });
 
 
@@ -229,7 +348,12 @@ firebase.auth().onAuthStateChanged(function (user) {
                         let results = data.data
                         for (let i = 0; i < results.length; i += 1) {
                             imgUrl = results[i].images.fixed_height.url;
-                            $("#trendingResults").append(`<div id=trendingResultsImg-${i} class="gifThumbnailContainer" ><img class="gif" src="${imgUrl}"><div id=trendingResultsBtn-${i} class="sendBtn"><button type="button" class="btn btn-primary">Send</button></div></div>`);
+                            $("#trendingResults").append(`<div id=trendingResultsImg-${i} class="gifThumbnailContainer" >
+                                                            <img class="gif" src="${imgUrl}">
+                                                            <div id=trendingResultsBtn-${i} class="sendBtn">
+                                                                <button type="button" class="btn btn-primary">Send</button>
+                                                            </div>
+                                                        </div>`);
                             $(`#trendingResultsBtn-${i}`).on("click", handleSendBtnClick);
                         }
                     }
@@ -237,7 +361,43 @@ firebase.auth().onAuthStateChanged(function (user) {
             }
 
             function handleNewConversationClick() {
-                $("#newConversationWindow").css("display", "block");
+                // Get a reference to the database service
+                let db = firebase.database();
+                let conversationList = []
+                // get list of users you speak with
+                let userConversationsRef = db.ref(`userList/${userName}/conversations`)
+                userConversationsRef.once('value', snapshot => {
+                    if (snapshot.val()) {
+                        conversationList = snapshot.val()
+                    }
+                }).then(() => {
+                    let userListRef = db.ref(`userList`)
+                    userListRef.once('value', snapshot => {
+                        if (snapshot.val()) {
+                            userList = Object.keys(snapshot.val())
+                            // reset user list first
+                            $("#userList").html("")
+                            userList.forEach((user) => {
+
+                                // add to list of available users if user is not current user 
+                                // or isn't already having a conversation with selected user
+                                if (user != userName && !conversationList.includes(user)) {
+                                    $("#userList").append(`
+                                <li>
+                                    <div>${user}
+                                        <button id="startConversationBtn-${user}" type="button" class="btn btn-primary">Start Conversation</button>
+                                    </div>
+                                </li>
+                                `)
+                                    $(`#startConversationBtn-${user}`).click(handleStartConversationBtnClick)
+                                }
+                            })
+                        }
+                    })
+                    $("#newConversationWindow").css("display", "block");
+                })
+
+
             }
 
             function handleCloseClick() {
