@@ -16,11 +16,15 @@ firebase.auth().onAuthStateChanged(function (user) {
             $(".closeBtn").on("click", handleCloseClick);
             $("#newConversationBtn").on("click", handleNewConversationClick);
             $("#searchBtn").on("click", handleSearchBtnClick);
-            $(".current-user").text(userName + "'s");
+            $(".current-user").text(capitalizeFirstLetter(userName) + "'s");
             $(".log-out-bnt").on("click", handleSignOutClick);
             $("#searchUsersInput").keyup(filterUsers)
             loadConversations();
             loadTrending();
+
+            function capitalizeFirstLetter(string) {
+                return string.charAt(0).toUpperCase() + string.slice(1);
+            }
 
             function handleStartConversationBtnClick() {
                 // set last spoken to user clicked on
@@ -99,11 +103,11 @@ firebase.auth().onAuthStateChanged(function (user) {
 
             function updateScroll() {
                 let element = "#messagesSection";
-                $(element).animate({ scrollTop: $(element)[0].scrollHeight }, 100);
+                $(element).animate({ scrollTop: $(element)[0].scrollHeight * 10 }, 100);
             }
 
             function handleConversationItemClick() {
-                let userClicked = this.innerHTML.trim();
+                let userClicked = this.innerHTML.trim().toLowerCase();
                 let db = firebase.database();
                 let lastSpokenRef = db.ref(`userList/${userName}/lastSpoken`);
                 lastSpokenRef.once('value', () => {
@@ -146,29 +150,46 @@ firebase.auth().onAuthStateChanged(function (user) {
                 }
                 $(elem).addClass("selected")
             }
+
+            function hideSearchTab() {
+                $("#searchResultsContainer").hide()
+            }
+
+            function showSearchTab() {
+                $("#searchResultsContainer").show()
+            }
+
+            function hideTrendingTab() {
+                $("#trendingResultsContainer").hide()
+            }
+
+            function showTrendingTab() {
+                $("#trendingResultsContainer").show()
+            }
+
             function handleTrendingTabClick() {
                 toggleSelected(this);
-                $("#searchSection").hide()
-                $("#searchResults").hide()
-                $("#trendingResults").show()
+                hideSearchTab();
+                showTrendingTab();
             }
 
             function handleSearchTabClick() {
                 toggleSelected(this);
-                $(this).addClass("selected")
-                $("#searchSection").show()
-                $("#searchResults").show()
-                $("#trendingResults").hide()
+                showSearchTab();
+                hideTrendingTab();
             }
 
             function handleFavoritesTabClick() {
                 toggleSelected(this);
-                $("#searchSection").hide()
+                hideSearchTab();
+                hideTrendingTab();
             }
 
             function handleReplyTabClick() {
                 toggleSelected(this);
-                $("#searchSection").hide()
+                hideSearchTab();
+                hideTrendingTab();
+
             }
 
             function handleSignOutClick() {
@@ -188,7 +209,7 @@ firebase.auth().onAuthStateChanged(function (user) {
                 lastSpokenRef.once('value', snapshot => {
                     if (snapshot.val()) {
                         lastSpoken = snapshot.val();
-                        $("#currentConversationOther").text(lastSpoken)
+                        $("#currentConversationOther").text(capitalizeFirstLetter(lastSpoken))
                     }
                 }).then(() => {
                     // Send message to DB
@@ -226,7 +247,7 @@ firebase.auth().onAuthStateChanged(function (user) {
                     if (snapshot.val()) {
                         lastSpoken = snapshot.val();
                         if (lastSpoken != "null") {
-                            $("#currentConversationOther").text(lastSpoken);
+                            $("#currentConversationOther").text(capitalizeFirstLetter(lastSpoken));
                         }
                     }
                 }).then(() => {
@@ -267,14 +288,14 @@ firebase.auth().onAuthStateChanged(function (user) {
                                         if (user === lastSpoken) {
                                             $("#conversationList").append(`
                                             <button class="conversationItem list-group-item d-flex justify-content-between align-items-center active">
-                                                ${user}
+                                                ${capitalizeFirstLetter(user)}
                                             </button>`
                                             );
                                         } else {
                                             // Append user as non active user
                                             $("#conversationList").append(`
                                             <button class="conversationItem list-group-item d-flex justify-content-between align-items-center">
-                                                ${user}
+                                                ${capitalizeFirstLetter(user)}
                                             </button>`
                                             );
                                         }
@@ -389,7 +410,7 @@ firebase.auth().onAuthStateChanged(function (user) {
                                 if (user != userName && !conversationList.includes(user)) {
                                     $("#userList").append(`
                                 <li>
-                                    <div>${user}
+                                    <div>${capitalizeFirstLetter(user)}
                                         <button id="startConversationBtn-${user}" type="button" class="btn btn-primary">Start Conversation</button>
                                     </div>
                                 </li>
