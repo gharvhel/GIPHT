@@ -41,7 +41,7 @@ firebase.auth().onAuthStateChanged(function (user) {
                     },
                     success: function (data) {
                         let result = data.data
-                        console.log(result)
+                        // console.log(result)
                         // Get a reference to the database service
                         let db = firebase.database();
                         let lastSpokenRef = db.ref(`userList/${userName}/lastSpoken`);
