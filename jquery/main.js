@@ -22,6 +22,7 @@ firebase.auth().onAuthStateChanged(function (user) {
             $("#searchUsersInput").keyup(filterUsers)
             loadConversations();
             loadTrending();
+            loadFavorites();
 
             function capitalizeFirstLetter(string) {
                 return string.charAt(0).toUpperCase() + string.slice(1);
@@ -149,8 +150,10 @@ firebase.auth().onAuthStateChanged(function (user) {
                                         <span style="font-size:30px;">💗</span>
                                         </button>
                                     </div>
-                                </div>`);
+                                </div>`
+                            );
                             $(`#searchResultsBtn-${i}`).on("click", handleSendBtnClick);
+                            $(`#searchResultsFavBtn-${i}`).on("click", {title: results[i].title, imageUrl: imgUrl}, handleFavClick);
                         }
                     }
                 });
@@ -167,6 +170,14 @@ firebase.auth().onAuthStateChanged(function (user) {
                 $(elem).addClass("selected")
             }
 
+            function hideFavTab() {
+                $("#favResultsContainer").hide()
+            }
+
+            function showFavTab() {
+                $("#favResultsContainer").show()
+            }
+            
             function hideSearchTab() {
                 $("#searchResultsContainer").hide()
             }
@@ -195,6 +206,7 @@ firebase.auth().onAuthStateChanged(function (user) {
                 toggleSelected(this);
                 hideSearchTab();
                 hideReplyTab();
+                hideFavTab();
                 showTrendingTab();
             }
 
@@ -202,6 +214,7 @@ firebase.auth().onAuthStateChanged(function (user) {
                 toggleSelected(this);
                 showSearchTab();
                 hideTrendingTab();
+                hideFavTab();
                 hideReplyTab();
             }
 
@@ -210,12 +223,14 @@ firebase.auth().onAuthStateChanged(function (user) {
                 hideSearchTab();
                 hideTrendingTab();
                 hideReplyTab();
+                showFavTab();
             }
 
             function handleReplyTabClick() {
                 toggleSelected(this);
                 hideSearchTab();
                 hideTrendingTab();
+                hideFavTab();
                 showReplyTab();
             }
 
@@ -226,6 +241,36 @@ firebase.auth().onAuthStateChanged(function (user) {
                 });
             }
 
+            function handleFavClick(event) {
+                let db = firebase.database();
+                let favoritesRef = db.ref(`userList/${userName}/favorites`);
+                favoritesRef.once('value', snapshot => {
+                    if (snapshot.val()){
+                        let currentFavs = snapshot.val();
+                        let favFound = false;
+                        currentFavs.forEach((fav) => {
+                            if(fav.url === event.data.imageUrl){
+                                favFound = true;
+                            }
+                        })
+                        if(!favFound){
+                            let length = currentFavs.length;
+                            favoritesRef.child(`${length}`).set({
+                                "title": event.data.title,
+                                "url": event.data.imageUrl
+                            });
+                        }
+                        
+                    }
+                    else {
+                        favoritesRef.set([{
+                            "title": event.data.title,
+                            "url": event.data.imageUrl
+                        }])
+                    }
+                })
+            }
+            
             function handleSendBtnClick() {
                 // Get a reference to the database service
                 let db = firebase.database();
@@ -383,7 +428,6 @@ firebase.auth().onAuthStateChanged(function (user) {
                                 }
                             }
                             updateScroll();
-
                         });
                     }
                 });
@@ -391,6 +435,45 @@ firebase.auth().onAuthStateChanged(function (user) {
 
             }
 
+            function loadFavorites() {
+                let db = firebase.database();
+                let favoritesRef = db.ref(`userList/${userName}/favorites`);
+                favoritesRef.once('value', snapshot => {
+                    let currentFavs = snapshot.val();
+                    if(currentFavs){
+                        console.log("Got some favs")
+                        favoritesRef.on('child_added', snapshot => {
+                            if (snapshot.val()) {
+                                let fav = snapshot.val();
+                                let i = snapshot.key;
+                                $("#favResults").append(`
+                                    <div id=favResultsImg-${i} class="gifThumbnailContainer" >
+                                        <img title="${fav.title}" class="gif" src="${fav.url}">
+                                        <div id=favResultsBtn-${i} class="sendBtn">
+                                            <button type="button" class="btn btn-primary">
+                                                Send
+                                            </button>
+                                        </div>
+                                        <div id=favResultsFavBtn-${i} class="favBtn">
+                                            <button type="button" class="btn btn-secondary favButton">
+                                            <span style="font-size:30px;">💗</span>
+                                            </button>
+                                        </div>
+                                    </div>`
+                                );
+                                $(`#favResultsBtn-${i}`).on("click", handleSendBtnClick);
+                                $(`#favResultsFavBtn-${i}`).on("click", {title: fav.title, imageUrl: fav.url}, handleFavClick);
+                            }
+                            updateScroll();
+                        });
+                    }
+                    else{
+                        console.log("Got no favs")
+                        $("#favResults").html(`<div class="alert alert-info" role="alert" style="margin: auto">No favorites!</div>`)
+                    }
+                })
+
+            }
             function loadSuggestedReply(conversationRefStr){
                 let db = firebase.database();
                 let searchStr = "";
@@ -434,12 +517,13 @@ firebase.auth().onAuthStateChanged(function (user) {
                                             </div>
                                         </div>`);
                                     $(`#replyResultsBtn-${i}`).on("click", handleSendBtnClick);
+                                    $(`#replyResultsFavBtn-${i}`).on("click", {title: results[i].title, imageUrl: imgUrl}, handleFavClick);
                                 }
                             }
                         });
                     } 
                     else {
-                        $("replyResults").html(`<div class="alert alert-info" role="alert">No suggested replies!</div>`)
+                        $("#replyResults").html(`<div class="alert alert-info" role="alert">No suggested replies!</div>`)
                     }
                 });
             }
@@ -474,6 +558,7 @@ firebase.auth().onAuthStateChanged(function (user) {
                                     </div>
                                 </div>`);
                             $(`#trendingResultsSendBtn-${i}`).on("click", handleSendBtnClick);
+                            $(`#trendingResultsFavBtn-${i}`).on("click", {title: results[i].title, imageUrl: imgUrl}, handleFavClick);
                         }
                     }
                 });
@@ -544,10 +629,6 @@ firebase.auth().onAuthStateChanged(function (user) {
                 // Start listing users from the beginning, 1000 at a time.
                 listAllUsers();
             }
-
-
-
-
         })
 
     } else {
@@ -555,7 +636,3 @@ firebase.auth().onAuthStateChanged(function (user) {
         window.location = "../index.html";
     }
 });
-
-
-
-
