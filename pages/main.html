@@ -36,7 +36,7 @@
   <div class="topnav">
     <a class="active" href="main.html">GIPHT</a>
     <a class="log-out-bnt" style="float:right" href="../index.html">Logout</a>
-    <a class="how-to-bnt" style="float:right" href="#">HowTo</a>
+    <a class="how-to-bnt" style="float:right" href="#">Help Guide</a>
   </div>
 
   <!-- Contacts and Messages Sections -->
@@ -112,9 +112,9 @@
             <input id="searchInput" class="gif-search-input form-control mr-sm-2" type="search" placeholder="Search GIFs"
               aria-label="Search">
             <button id="searchBtn" type="button" class="btn btn-primary mr-sm-2">Search</button>
-            <button type="button" class="btn btn-primary">Toggle More Options</button>
+            <button id="toggleBtn" type="button" class="btn btn-primary">Select Rating</button>
           </div>
-          <div id="moreOptions">
+          <div id="moreOptions" style="display:none">
               <form id="filters">
                   <input class="filterOption" type="radio" name="filter" value="all" checked="checked"> All<br>
                   <input class="filterOption" type="radio" name="filter" value="Y"> Children (Y)<br>
@@ -218,7 +218,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <span class="closeBtn" id="howToCloseBtn">&times;</span>
-        <h2>Help</h2>
+        <h2>Help Guide</h2>
       </div>
       <div class="modal-body">
         Haha xd no help

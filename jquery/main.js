@@ -27,6 +27,7 @@ firebase.auth().onAuthStateChanged(function (user) {
             $("#searchUsersInput").keyup(filterUsers)
             $("#sendRandomBtn").on("click", handleSendRandomBtnClick);
             $(".filterOption").on("click", getRadioValue);
+            $("#toggleBtn").on("click", toggleMoreOptions);
             loadConversations();
             loadTrending();
             loadFavorites();
@@ -197,6 +198,7 @@ firebase.auth().onAuthStateChanged(function (user) {
             }
 
             function handleSearchBtnClick() {
+                $("#moreOptions").hide();
                 let searchStr = $("#searchInput").val()
                 let endPoint = (searchRadioVal === "all") ? `https://api.giphy.com/v1/gifs/search?q=${searchStr}&api_key=${apiKey}&limit=5&offset=${searchOffset}` : `https://api.giphy.com/v1/gifs/search?q=${searchStr}&api_key=${apiKey}&limit=5&offset=${searchOffset}&rating=${searchRadioVal}`
                 $.ajax({
@@ -244,6 +246,10 @@ firebase.auth().onAuthStateChanged(function (user) {
                     }
                 }
                 $(elem).addClass("selected")
+            }
+
+            function toggleMoreOptions() {
+                $("#moreOptions").toggle();
             }
 
             function hideFavTab() {
