@@ -78,6 +78,8 @@ firebase.auth().onAuthStateChanged(function (user) {
                             }).then(() => {
                                 console.log("Updating title")
                                 db.ref(`messages/${conversationRefStr}/lastTitle`).set(title);
+                            }).then(()=>{
+                                updateScroll();
                             });
                         });
                     }
