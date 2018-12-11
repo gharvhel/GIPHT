@@ -238,7 +238,7 @@ firebase.auth().onAuthStateChanged(function (user) {
                         conversationRefStr = `${lastSpoken}+${userName}`;
                     }
                     let conversationRef = db.ref(`messages/${conversationRefStr}`);
-                    let imgUrl = this.previousSibling.src;
+                    let imgUrl = $(this.parentNode).children('img').attr('src')
                     conversationRef.once('value', snapshot => {
                         msgList = snapshot.val()
                         conversationRef.child(`${msgList.length}`).set({
@@ -386,7 +386,6 @@ firebase.auth().onAuthStateChanged(function (user) {
                     success: function (data) {
                         let results = data.data
                         for (let i = 0; i < results.length; i += 1) {
-                            console.log(results[i])
                             imgUrl = results[i].images.fixed_height.url;
                             $("#trendingResults").append(`
                                 <div id=searchResultsImg-${i} class="gifThumbnailContainer" >
