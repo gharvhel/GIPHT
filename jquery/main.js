@@ -153,7 +153,7 @@ firebase.auth().onAuthStateChanged(function (user) {
                                 </div>`
                             );
                             $(`#searchResultsBtn-${i}`).on("click", handleSendBtnClick);
-                            $(`#searchResultsFavBtn-${i}`).on("click", {title: results[i].title, imageUrl: imgUrl}, handleFavClick);
+                            $(`#searchResultsFavBtn-${i}`).on("click", { title: results[i].title, imageUrl: imgUrl }, handleFavClick);
                         }
                     }
                 });
@@ -177,7 +177,7 @@ firebase.auth().onAuthStateChanged(function (user) {
             function showFavTab() {
                 $("#favResultsContainer").show()
             }
-            
+
             function hideSearchTab() {
                 $("#searchResultsContainer").hide()
             }
@@ -245,22 +245,22 @@ firebase.auth().onAuthStateChanged(function (user) {
                 let db = firebase.database();
                 let favoritesRef = db.ref(`userList/${userName}/favorites`);
                 favoritesRef.once('value', snapshot => {
-                    if (snapshot.val()){
+                    if (snapshot.val()) {
                         let currentFavs = snapshot.val();
                         let favFound = false;
                         currentFavs.forEach((fav) => {
-                            if(fav.url === event.data.imageUrl){
+                            if (fav.url === event.data.imageUrl) {
                                 favFound = true;
                             }
                         })
-                        if(!favFound){
+                        if (!favFound) {
                             let length = currentFavs.length;
                             favoritesRef.child(`${length}`).set({
                                 "title": event.data.title,
                                 "url": event.data.imageUrl
                             });
                         }
-                        
+
                     }
                     else {
                         favoritesRef.set([{
@@ -270,7 +270,7 @@ firebase.auth().onAuthStateChanged(function (user) {
                     }
                 })
             }
-            
+
             function handleSendBtnClick() {
                 // Get a reference to the database service
                 let db = firebase.database();
@@ -302,8 +302,8 @@ firebase.auth().onAuthStateChanged(function (user) {
                         msgList = snapshot.val()
                         let length = (msgList === null) ? 0 : msgList.length;
                         conversationRef.child(`${length}`).set({
-                          "sender": userName,
-                          "url": imgUrl,
+                            "sender": userName,
+                            "url": imgUrl,
                         });
                     }).then(() => {
                         console.log("Updating title")
@@ -342,7 +342,7 @@ firebase.auth().onAuthStateChanged(function (user) {
                                     loadConversations();
                                 } else {
                                     $("#conversationList").html(`
-                                <div class="alert alert-primary" role="alert">
+                                <div class="alert alert-info" role="alert">
                                     No ongoing conversations Yet!
                                 </div>`);
                                 }
@@ -374,7 +374,7 @@ firebase.auth().onAuthStateChanged(function (user) {
                                             );
                                         }
                                     }
-                                    
+
 
                                     $(".conversationItem").on("click", handleConversationItemClick);
 
@@ -440,7 +440,7 @@ firebase.auth().onAuthStateChanged(function (user) {
                 let favoritesRef = db.ref(`userList/${userName}/favorites`);
                 favoritesRef.once('value', snapshot => {
                     let currentFavs = snapshot.val();
-                    if(currentFavs){
+                    if (currentFavs) {
                         console.log("Got some favs")
                         favoritesRef.on('child_added', snapshot => {
                             if (snapshot.val()) {
@@ -462,19 +462,22 @@ firebase.auth().onAuthStateChanged(function (user) {
                                     </div>`
                                 );
                                 $(`#favResultsBtn-${i}`).on("click", handleSendBtnClick);
-                                $(`#favResultsFavBtn-${i}`).on("click", {title: fav.title, imageUrl: fav.url}, handleFavClick);
+                                $(`#favResultsFavBtn-${i}`).on("click", { title: fav.title, imageUrl: fav.url }, handleFavClick);
                             }
                             updateScroll();
                         });
                     }
-                    else{
+                    else {
                         console.log("Got no favs")
-                        $("#favResults").html(`<div class="alert alert-info" role="alert" style="margin: auto">No favorites!</div>`)
+                        $("#favResults").html(`
+                            <div class="text-center alert alert-info" role="alert" style="margin: 10px auto; width: 100%">
+                                No favorites!
+                            </div>`)
                     }
                 })
 
             }
-            function loadSuggestedReply(conversationRefStr){
+            function loadSuggestedReply(conversationRefStr) {
                 let db = firebase.database();
                 let searchStr = "";
                 let titleRef = db.ref(`messages/${conversationRefStr}/lastTitle`);
@@ -483,11 +486,11 @@ firebase.auth().onAuthStateChanged(function (user) {
                     if (snapshot.val()) {
                         searchStr = snapshot.val();
                     }
-                    else{
+                    else {
                         searchStr = "null";
                     }
                 }).then(() => {
-                    if(searchStr !== "null"){
+                    if (searchStr !== "null") {
                         $.ajax({
                             url: `https://api.giphy.com/v1/gifs/search?q=${searchStr}&api_key=${apiKey}&limit=5`,
                             type: "GET",
@@ -517,17 +520,17 @@ firebase.auth().onAuthStateChanged(function (user) {
                                             </div>
                                         </div>`);
                                     $(`#replyResultsBtn-${i}`).on("click", handleSendBtnClick);
-                                    $(`#replyResultsFavBtn-${i}`).on("click", {title: results[i].title, imageUrl: imgUrl}, handleFavClick);
+                                    $(`#replyResultsFavBtn-${i}`).on("click", { title: results[i].title, imageUrl: imgUrl }, handleFavClick);
                                 }
                             }
                         });
-                    } 
+                    }
                     else {
                         $("#replyResults").html(`<div class="alert alert-info" role="alert">No suggested replies!</div>`)
                     }
                 });
             }
-            
+
             function loadTrending() {
                 $.ajax({
                     url: `https://api.giphy.com/v1/gifs/trending?&api_key=${apiKey}&limit=5`,
@@ -558,7 +561,7 @@ firebase.auth().onAuthStateChanged(function (user) {
                                     </div>
                                 </div>`);
                             $(`#trendingResultsSendBtn-${i}`).on("click", handleSendBtnClick);
-                            $(`#trendingResultsFavBtn-${i}`).on("click", {title: results[i].title, imageUrl: imgUrl}, handleFavClick);
+                            $(`#trendingResultsFavBtn-${i}`).on("click", { title: results[i].title, imageUrl: imgUrl }, handleFavClick);
                         }
                     }
                 });
@@ -576,26 +579,35 @@ firebase.auth().onAuthStateChanged(function (user) {
                     }
                 }).then(() => {
                     let userListRef = db.ref(`userList`)
+                    console.log(conversationList)
                     userListRef.once('value', snapshot => {
                         if (snapshot.val()) {
                             userList = Object.keys(snapshot.val())
-                            // reset user list first
-                            $("#userList").html("")
-                            userList.forEach((user) => {
+                            console.log(conversationList)
+                            if (conversationList.length !== userList.length) {
+                                // reset user list first
+                                $("#userList").html("")
+                                userList.forEach((user) => {
 
-                                // add to list of available users if user is not current user 
-                                // or isn't already having a conversation with selected user
-                                if (user != userName && !conversationList.includes(user)) {
-                                    $("#userList").append(`
+                                    // add to list of available users if user is not current user 
+                                    // or isn't already having a conversation with selected user
+                                    if (user != userName && !conversationList.includes(user)) {
+                                        $("#userList").append(`
                                 <li>
                                     <div>${capitalizeFirstLetter(user)}
                                         <button id="startConversationBtn-${user}" type="button" class="btn btn-primary">Start Conversation</button>
                                     </div>
                                 </li>
                                 `)
-                                    $(`#startConversationBtn-${user}`).click(handleStartConversationBtnClick)
-                                }
-                            })
+                                        $(`#startConversationBtn-${user}`).click(handleStartConversationBtnClick)
+                                    }
+                                })
+                            } else {
+                                $("#userList").html(`
+                                <div class="alert alert-info" role="alert">
+                                    No more users to talk to!
+                                </div>`)
+                            }
                         }
                     })
                     $("#newConversationWindow").css("display", "block");
