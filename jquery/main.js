@@ -242,7 +242,8 @@ firebase.auth().onAuthStateChanged(function (user) {
             }
 
             function showFavTab() {
-                $("#favResultsContainer").show()
+                $("#favResultsContainer").show();
+                loadFavorites();
             }
 
             function hideSearchTab() {
@@ -318,6 +319,7 @@ firebase.auth().onAuthStateChanged(function (user) {
 
             function handleUnfavClick(event) {
                 $(`#favResultsImg-${event.data.index}`).remove();
+                console.log($(this).parent().parent().parent().parent())
                 let db = firebase.database();
                 let favoritesRef = db.ref(`userList/${userName}/favorites`);
                 favoritesRef.once('value', snapshot => {
@@ -545,6 +547,7 @@ firebase.auth().onAuthStateChanged(function (user) {
                             if (snapshot.val()) {
                                 let fav = snapshot.val();
                                 let i = snapshot.key;
+                                $("#favResults").html("");
                                 $("#favResults").append(`
                                     <div id=favResultsImg-${i} class="gifThumbnailContainer" >
                                         <img title="${fav.title}" class="gif" src="${fav.url}">
