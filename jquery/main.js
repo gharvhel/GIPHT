@@ -20,9 +20,65 @@ firebase.auth().onAuthStateChanged(function (user) {
             $(".current-user").text(capitalizeFirstLetter(userName) + "'s");
             $(".log-out-bnt").on("click", handleSignOutClick);
             $("#searchUsersInput").keyup(filterUsers)
+            $("#sendRandomBtn").on("click", handleSendRandomBtnClick);
             loadConversations();
             loadTrending();
             loadFavorites();
+
+            function handleSendRandomBtnClick() {
+                $.ajax({
+                    url: `https://api.giphy.com/v1/gifs/random?api_key=${apiKey}`,
+                    type: "GET",
+                    beforeSend: function () {
+                        console.log("Sending Random Gif")
+                    },
+                    complete: function (data) {
+
+                    },
+                    success: function (data) {
+                        let results = data.data
+                        console.log(results)
+                        // Get a reference to the database service
+                        let db = firebase.database();
+                        let lastSpokenRef = db.ref(`userList/${userName}/lastSpoken`);
+                        let lastSpoken = "";
+
+                        // Get the last user you spoke with
+                        lastSpokenRef.once('value', snapshot => {
+                            if (snapshot.val()) {
+                                lastSpoken = snapshot.val();
+                                $("#currentConversationOther").text(capitalizeFirstLetter(lastSpoken))
+                            }
+                        }).then(() => {
+                            // Send message to DB
+                            let conversationRefStr = "";
+                            // let compare = userName.localeCompare(lastSpoken);
+                            // if (compare == 0) {
+                            //     // strings are the same
+                            //     console.log("ERROR: Current user and user last spoken to are the same")
+                            // } else if (compare == -1) {
+                            //     conversationRefStr = `${userName}+${lastSpoken}`;
+                            // } else {
+                            //     conversationRefStr = `${lastSpoken}+${userName}`;
+                            // }
+                            // let conversationRef = db.ref(`messages/${conversationRefStr}/conversations`);
+                            // let imgUrl = $(this.parentNode).children('img').attr('src')
+                            // let title = $(this.parentNode).children('img').attr('title')
+                            // conversationRef.once('value', snapshot => {
+                            //     msgList = snapshot.val()
+                            //     let length = (msgList === null) ? 0 : msgList.length;
+                            //     conversationRef.child(`${length}`).set({
+                            //         "sender": userName,
+                            //         "url": imgUrl,
+                            //     });
+                            // }).then(() => {
+                            //     console.log("Updating title")
+                            //     db.ref(`messages/${conversationRefStr}/lastTitle`).set(title);
+                            // });
+                        });
+                    }
+                });
+            }
 
             function capitalizeFirstLetter(string) {
                 return string.charAt(0).toUpperCase() + string.slice(1);

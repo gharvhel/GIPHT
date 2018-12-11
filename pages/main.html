@@ -106,12 +106,15 @@
       <!-- SEARCH SECTION -->
       <div id="searchResultsContainer" style="display:none;">
         <!-- Search Input -->
-        <div id="searchSection" >
+        <div id="searchSection">
           <div class="form-inline">
             <input id="searchInput" class="gif-search-input form-control mr-sm-2" type="search" placeholder="Search GIFs"
               aria-label="Search">
             <button id="searchBtn" type="button" class="btn btn-primary mr-sm-2">Search</button>
             <button type="button" class="btn btn-primary">Toggle More Options</button>
+          </div>
+          <div id="moreOptions">
+              <button id="sendRandomBtn" type="button" class="btn btn-primary">Send Random &#127922;</button>
           </div>
         </div>
         <div id="searchResults" class="results custom-scrollbar">
@@ -121,58 +124,58 @@
         </div>
         <!-- Pagination -->
         <nav aria-label="Gif navigation">
-            <ul class="pagination justify-content-center">
-              <li class="page-item disabled">
-                <div class="page-link" tabindex="-1">Previous</div>
-              </li>
-              <li class="page-item active">
-                <div class="page-link">1 <span class="sr-only">(current)</span></div>
-              </li>
-              <li class="page-item">
-                <div class="page-link">Next</div>
-              </li>
-            </ul>
-          </nav>
+          <ul class="pagination justify-content-center">
+            <li class="page-item disabled">
+              <div class="page-link" tabindex="-1">Previous</div>
+            </li>
+            <li class="page-item active">
+              <div class="page-link">1 <span class="sr-only">(current)</span></div>
+            </li>
+            <li class="page-item">
+              <div class="page-link">Next</div>
+            </li>
+          </ul>
+        </nav>
       </div>
     </div>
-      
+
     <!-- REPLY SECTION -->
-      <div id="replyResultsContainer" style="display: none">
-        <div id="replyResults" class="results custom-scrollbar"></div>
-        <!-- Pagination -->
-        <nav aria-label="Gif navigation">
-          <ul class="pagination justify-content-center">
-            <li class="page-item disabled">
-              <div class="page-link" tabindex="-1">Previous</div>
-            </li>
-            <li class="page-item active">
-              <div class="page-link">1 <span class="sr-only">(current)</span></div>
-            </li>
-            <li class="page-item">
-              <div class="page-link">Next</div>
-            </li>
-          </ul>
-        </nav>
-      </div>
-      
+    <div id="replyResultsContainer" style="display: none">
+      <div id="replyResults" class="results custom-scrollbar"></div>
+      <!-- Pagination -->
+      <nav aria-label="Gif navigation">
+        <ul class="pagination justify-content-center">
+          <li class="page-item disabled">
+            <div class="page-link" tabindex="-1">Previous</div>
+          </li>
+          <li class="page-item active">
+            <div class="page-link">1 <span class="sr-only">(current)</span></div>
+          </li>
+          <li class="page-item">
+            <div class="page-link">Next</div>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
     <!-- FAVORITES SECTION -->
-      <div id="favResultsContainer" style="display: none">
-        <div id="favResults" class="results custom-scrollbar"></div>
-        <!-- Pagination -->
-        <nav aria-label="Gif navigation">
-          <ul class="pagination justify-content-center">
-            <li class="page-item disabled">
-              <div class="page-link" tabindex="-1">Previous</div>
-            </li>
-            <li class="page-item active">
-              <div class="page-link">1 <span class="sr-only">(current)</span></div>
-            </li>
-            <li class="page-item">
-              <div class="page-link">Next</div>
-            </li>
-          </ul>
-        </nav>
-      </div>
+    <div id="favResultsContainer" style="display: none">
+      <div id="favResults" class="results custom-scrollbar"></div>
+      <!-- Pagination -->
+      <nav aria-label="Gif navigation">
+        <ul class="pagination justify-content-center">
+          <li class="page-item disabled">
+            <div class="page-link" tabindex="-1">Previous</div>
+          </li>
+          <li class="page-item active">
+            <div class="page-link">1 <span class="sr-only">(current)</span></div>
+          </li>
+          <li class="page-item">
+            <div class="page-link">Next</div>
+          </li>
+        </ul>
+      </nav>
+    </div>
 
 
   </div>
