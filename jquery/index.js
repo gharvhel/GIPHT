@@ -30,12 +30,16 @@ $(document).ready(function () {
     // Validate sign-up form
     function validate_form(username, psw, psw_repeat) {
         let valid = true;
+        let alphanum = /^[0-9a-zA-Z]+$/;
         if (psw != psw_repeat) {
             valid = false;
             alert("Passwords do not match.")
         } else if (username == "null") {
             valid = false;
             alert("Username cannot be null.")
+        } else if (!username.match(alphanum)) {
+            valid = false;
+            alert("The username is invalid.")
         }
         return valid;
     }
