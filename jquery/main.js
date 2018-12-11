@@ -139,12 +139,12 @@ firebase.auth().onAuthStateChanged(function (user) {
                                     <img class="gif" src="${imgUrl}">
                                     <div id=searchResultsBtn-${i} class="sendBtn">
                                         <button type="button" class="btn btn-primary">
-                                            Sendd
+                                            Send
                                         </button>
                                     </div>
                                     <div id=searchResultsFavBtn-${i} class="favBtn">
-                                        <button type="button" class="btn btn-primary">
-                                            Favvvvvvvvv
+                                        <button type="button" class="btn btn-secondary">
+                                        <span style="font-size:30px;">💗</span>
                                         </button>
                                     </div>
                                 </div>`);
@@ -237,14 +237,18 @@ firebase.auth().onAuthStateChanged(function (user) {
                     } else {
                         conversationRefStr = `${lastSpoken}+${userName}`;
                     }
-                    let conversationRef = db.ref(`messages/${conversationRefStr}`);
+                    let conversationRef = db.ref(`messages/${conversationRefStr}/conversations`);
                     let imgUrl = $(this.parentNode).children('img').attr('src')
+                    let title = $(this.parentNode).children('img').attr('title')
                     conversationRef.once('value', snapshot => {
                         msgList = snapshot.val()
-                        conversationRef.child(`${msgList.length}`).set({
-                            "sender": userName,
-                            "url": imgUrl
-                        })
+                        let length = (msgList === null) ? 0 : msgList.length;
+                        conversationRef.child(`${length}`).set({
+                          "sender": userName,
+                          "url": imgUrl,
+                        });
+                    }).then(() => {
+                        db.ref(`messages/${conversationRefStr}/lastTitle`).set(title);
                     });
                 });
             }
@@ -336,13 +340,14 @@ firebase.auth().onAuthStateChanged(function (user) {
                             conversationRefStr = `${lastSpoken}+${userName}`;
                         }
 
-                        let conversationRef = db.ref(`messages/${conversationRefStr}`);
+                        let conversationRef = db.ref(`messages/${conversationRefStr}/conversations`);
                         // reset message div content first
                         $(".messages-div").html(`
                             
                         `);
                         // LOADS and sets listener
                         conversationRef.on('child_added', snapshot => {
+                            console.log("Entering proper place")
                             if (snapshot.val()) {
                                 messageList = snapshot.val();
                                 msg = snapshot.val();
@@ -386,10 +391,11 @@ firebase.auth().onAuthStateChanged(function (user) {
                     success: function (data) {
                         let results = data.data
                         for (let i = 0; i < results.length; i += 1) {
+                            console.log(results[i])
                             imgUrl = results[i].images.fixed_height.url;
                             $("#trendingResults").append(`
                                 <div id=searchResultsImg-${i} class="gifThumbnailContainer" >
-                                    <img class="gif" src="${imgUrl}">
+                                    <img title="${results[i].title}" class="gif" src="${imgUrl}">
                                     <div id=trendingResultsSendBtn-${i} class="sendBtn">
                                         <button type="button" class="btn btn-primary">
                                             Send
@@ -397,7 +403,7 @@ firebase.auth().onAuthStateChanged(function (user) {
                                     </div>
                                     <div id=trendingResultsFavBtn-${i} class="favBtn">
                                         <button type="button" class="btn btn-secondary favButton">
-                                        <span style="font-size:30px;">💔</span>
+                                        <span style="font-size:30px;">💗</span>
                                         
                                         </button>
                                     </div>
