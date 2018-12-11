@@ -138,14 +138,14 @@ firebase.auth().onAuthStateChanged(function (user) {
                             imgUrl = results[i].images.fixed_height.url;
                             $("#searchResults").append(`
                                 <div id=searchResultsImg-${i} class="gifThumbnailContainer" >
-                                    <img class="gif" src="${imgUrl}">
+                                    <img title="${results[i].title}" class="gif" src="${imgUrl}">
                                     <div id=searchResultsBtn-${i} class="sendBtn">
                                         <button type="button" class="btn btn-primary">
                                             Send
                                         </button>
                                     </div>
                                     <div id=searchResultsFavBtn-${i} class="favBtn">
-                                        <button type="button" class="btn btn-secondary">
+                                        <button type="button" class="btn btn-secondary favButton">
                                         <span style="font-size:30px;">💗</span>
                                         </button>
                                     </div>
@@ -178,6 +178,11 @@ firebase.auth().onAuthStateChanged(function (user) {
             function showReplyTab() {
                 $("#replyResultsContainer").show()
             }
+
+            function hideReplyTab() {
+                $("#replyResultsContainer").hide()
+            }
+
             function hideTrendingTab() {
                 $("#trendingResultsContainer").hide()
             }
@@ -189,6 +194,7 @@ firebase.auth().onAuthStateChanged(function (user) {
             function handleTrendingTabClick() {
                 toggleSelected(this);
                 hideSearchTab();
+                hideReplyTab();
                 showTrendingTab();
             }
 
@@ -196,12 +202,14 @@ firebase.auth().onAuthStateChanged(function (user) {
                 toggleSelected(this);
                 showSearchTab();
                 hideTrendingTab();
+                hideReplyTab();
             }
 
             function handleFavoritesTabClick() {
                 toggleSelected(this);
                 hideSearchTab();
                 hideTrendingTab();
+                hideReplyTab();
             }
 
             function handleReplyTabClick() {
@@ -209,7 +217,6 @@ firebase.auth().onAuthStateChanged(function (user) {
                 hideSearchTab();
                 hideTrendingTab();
                 showReplyTab();
-
             }
 
             function handleSignOutClick() {
@@ -414,14 +421,14 @@ firebase.auth().onAuthStateChanged(function (user) {
                                     imgUrl = results[i].images.fixed_height.url;
                                     $("#replyResults").append(`
                                         <div id=replyResultsImg-${i} class="gifThumbnailContainer" >
-                                            <img class="gif" src="${imgUrl}">
+                                            <img title="${results[i].title}" class="gif" src="${imgUrl}">
                                             <div id="replyResultsBtn-${i}" class="sendBtn">
                                                 <button type="button" class="btn btn-primary">
                                                     Send
                                                 </button>
                                             </div>
                                             <div id=replyResultsFavBtn-${i} class="favBtn">
-                                                <button type="button" class="btn btn-secondary">
+                                                <button type="button" class="btn btn-secondary favButton">
                                                 <span style="font-size:30px;">💗</span>
                                                 </button>
                                             </div>
