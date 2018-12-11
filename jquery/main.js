@@ -241,6 +241,30 @@ firebase.auth().onAuthStateChanged(function (user) {
                 });
             }
 
+            function handleUnfavClick(event) {
+                $(`#favResultsImg-${event.data.index}`).remove();
+                let db = firebase.database();
+                let favoritesRef = db.ref(`userList/${userName}/favorites`);
+                favoritesRef.once('value', snapshot => {
+                    if (snapshot.val()) {
+                        let allFavs = snapshot.val();
+                        let length = allFavs.length;
+                        if(length === 2) {
+                            if(event.data.index === 0){
+                                favoritesRef.child(0).set(allFavs[allFavs.length - 1]);
+                            }
+                            favoritesRef.child(allFavs.length - 1).remove();
+                        }
+                        else if(length === 1){
+                            favoritesRef.child(event.data.index).remove();
+                        }
+                        else {
+                            favoritesRef.child(event.data.index).set(allFavs[allFavs.length - 1]);
+                            favoritesRef.child(allFavs.length - 1).remove();
+                        }
+                    }
+                });
+            }
             function handleFavClick(event) {
                 let db = firebase.database();
                 let favoritesRef = db.ref(`userList/${userName}/favorites`);
@@ -456,13 +480,13 @@ firebase.auth().onAuthStateChanged(function (user) {
                                         </div>
                                         <div id=favResultsFavBtn-${i} class="favBtn">
                                             <button type="button" class="btn btn-secondary favButton">
-                                            <span style="font-size:30px;">💗</span>
+                                            <span style="font-size:30px;">❌</span>
                                             </button>
                                         </div>
                                     </div>`
                                 );
                                 $(`#favResultsBtn-${i}`).on("click", handleSendBtnClick);
-                                $(`#favResultsFavBtn-${i}`).on("click", { title: fav.title, imageUrl: fav.url }, handleFavClick);
+                                $(`#favResultsFavBtn-${i}`).on("click", { title: fav.title, imageUrl: fav.url, index: i }, handleUnfavClick);
                             }
                             updateScroll();
                         });
