@@ -173,6 +173,9 @@ firebase.auth().onAuthStateChanged(function (user) {
                 $("#searchResultsContainer").show()
             }
 
+            function showReplyTab() {
+                $("#replyResultsContainer").show()
+            }
             function hideTrendingTab() {
                 $("#trendingResultsContainer").hide()
             }
@@ -203,6 +206,7 @@ firebase.auth().onAuthStateChanged(function (user) {
                 toggleSelected(this);
                 hideSearchTab();
                 hideTrendingTab();
+                showReplyTab();
 
             }
 
@@ -248,6 +252,7 @@ firebase.auth().onAuthStateChanged(function (user) {
                           "url": imgUrl,
                         });
                     }).then(() => {
+                        console.log("Updating title")
                         db.ref(`messages/${conversationRefStr}/lastTitle`).set(title);
                     });
                 });
@@ -280,10 +285,8 @@ firebase.auth().onAuthStateChanged(function (user) {
                             let conversationList = snapshot.val()
                             if (conversationList.length == 1) {
                                 if (lastSpoken != "null") {
-                                    console.log("HERE LOOPING");
                                     loadConversations();
                                 } else {
-                                    console.log(lastSpoken);
                                     $("#conversationList").html(`
                                 <div class="alert alert-primary" role="alert">
                                     No ongoing conversations Yet!
@@ -347,7 +350,8 @@ firebase.auth().onAuthStateChanged(function (user) {
                         `);
                         // LOADS and sets listener
                         conversationRef.on('child_added', snapshot => {
-                            console.log("Entering proper place")
+                            console.log("Updating suggested reply")
+                            loadSuggestedReply(conversationRefStr);
                             if (snapshot.val()) {
                                 messageList = snapshot.val();
                                 msg = snapshot.val();
@@ -378,6 +382,56 @@ firebase.auth().onAuthStateChanged(function (user) {
 
             }
 
+            function loadSuggestedReply(conversationRefStr){
+                let db = firebase.database();
+                let searchStr = "";
+                let titleRef = db.ref(`messages/${conversationRefStr}/lastTitle`);
+                // Get the last user you spoke with
+                titleRef.once('value', snapshot => {
+                    if (snapshot.val()) {
+                        searchStr = snapshot.val();
+                    }
+                    else{
+                        searchStr = "null";
+                    }
+                }).then(() => {
+                    if(searchStr !== "null"){
+                        $.ajax({
+                            url: `https://api.giphy.com/v1/gifs/search?q=${searchStr}&api_key=${apiKey}&limit=5`,
+                            type: "GET",
+                            beforeSend: function () {
+                                console.log("Loading Trending")
+                            },
+                            complete: function (data) {
+
+                            },
+                            success: function (data) {
+                                let results = data.data
+                                $("#replyResults").html('');
+                                for (let i = 0; i < results.length; i += 1) {
+                                    imgUrl = results[i].images.fixed_height.url;
+                                    $("#replyResults").append(`
+                                        <div id=replyResultsImg-${i} class="gifThumbnailContainer" >
+                                            <img class="gif" src="${imgUrl}">
+                                            <div id="replyResultsBtn-${i}" class="sendBtn">
+                                                <button type="button" class="btn btn-primary">
+                                                    Send
+                                                </button>
+                                            </div>
+                                            <div id=replyResultsFavBtn-${i} class="favBtn">
+                                                <button type="button" class="btn btn-secondary">
+                                                <span style="font-size:30px;">💗</span>
+                                                </button>
+                                            </div>
+                                        </div>`);
+                                    $(`#replyResultsBtn-${i}`).on("click", handleSendBtnClick);
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+            
             function loadTrending() {
                 $.ajax({
                     url: `https://api.giphy.com/v1/gifs/trending?&api_key=${apiKey}&limit=5`,
@@ -391,7 +445,6 @@ firebase.auth().onAuthStateChanged(function (user) {
                     success: function (data) {
                         let results = data.data
                         for (let i = 0; i < results.length; i += 1) {
-                            console.log(results[i])
                             imgUrl = results[i].images.fixed_height.url;
                             $("#trendingResults").append(`
                                 <div id=searchResultsImg-${i} class="gifThumbnailContainer" >
