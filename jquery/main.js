@@ -65,8 +65,10 @@ firebase.auth().onAuthStateChanged(function (user) {
                         conversationRefStr = `${userClicked}+${userName}`;
                     }
 
-                    let conversationRef = db.ref(`messages/${conversationRefStr}`);
+                    let conversationRef = db.ref(`messages/${conversationRefStr}/conversations`);
                     conversationRef.set([{ "sender": userName, "url": "https://media1.giphy.com/media/dzaUX7CAG0Ihi/200.gif" }]);
+                    let titleRef = db.ref(`messages/${conversationRefStr}/lastTitle`);
+                    titleRef.set("Hello");
                 }).then(() => {
                     loadConversations();
                     handleCloseClick();
@@ -428,6 +430,9 @@ firebase.auth().onAuthStateChanged(function (user) {
                                 }
                             }
                         });
+                    } 
+                    else {
+                        $("replyResults").html(`<div class="alert alert-info" role="alert">No suggested replies!</div>`)
                     }
                 });
             }
