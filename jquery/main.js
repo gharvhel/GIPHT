@@ -8,6 +8,7 @@ firebase.auth().onAuthStateChanged(function (user) {
         let userName = email.split("@")[0];
         let trendingOffset = 0;
         let searchOffset = 0;
+        let searchRadioVal = "all";
         let photoURL = user.photoURL; // We can save profile photo for a user if we have time
 
         $(document).ready(function () {
@@ -25,6 +26,7 @@ firebase.auth().onAuthStateChanged(function (user) {
             $(".how-to-bnt").on("click", handleHowToClick);
             $("#searchUsersInput").keyup(filterUsers)
             $("#sendRandomBtn").on("click", handleSendRandomBtnClick);
+            $(".filterOption").on("click", getRadioValue);
             loadConversations();
             loadTrending();
             loadFavorites();
@@ -179,6 +181,10 @@ firebase.auth().onAuthStateChanged(function (user) {
                 $(element).animate({ scrollTop: $(element)[0].scrollHeight * 10 }, 100);
             }
 
+            function getRadioValue() {
+                searchRadioVal = this.value;
+            }
+            
             function handleConversationItemClick() {
                 let userClicked = this.innerHTML.trim().toLowerCase();
                 let db = firebase.database();
@@ -192,8 +198,9 @@ firebase.auth().onAuthStateChanged(function (user) {
 
             function handleSearchBtnClick() {
                 let searchStr = $("#searchInput").val()
+                let endPoint = (searchRadioVal === "all") ? `https://api.giphy.com/v1/gifs/search?q=${searchStr}&api_key=${apiKey}&limit=5&offset=${searchOffset}` : `https://api.giphy.com/v1/gifs/search?q=${searchStr}&api_key=${apiKey}&limit=5&offset=${searchOffset}&rating=${searchRadioVal}`
                 $.ajax({
-                    url: `https://api.giphy.com/v1/gifs/search?q=${searchStr}&api_key=${apiKey}&limit=5&offset=${searchOffset}`,
+                    url: endPoint,
                     type: "GET",
                     beforeSend: function () {
                         console.log("Loading Trending")

@@ -16,7 +16,12 @@
 }
 
 
-
+#filters {
+    background-color: white;
+    border-radius: 5px;
+    border: 4px solid #117AFF;
+    padding: 10px;
+}
 /* .messages-div::-webkit-resizer {
     background-color: blue;
 } */
