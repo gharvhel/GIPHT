@@ -1,14 +1,20 @@
 # GIPHT
 
 ## To run
-Get an API Key
 
-To use the GIPHY API, you'll need to obtain an API Key by creating an app. Note that you'll need a GIPHY account to create an app. 
+open index.html in a browser
+Tested in Google Chrome
 
-Go to https://developers.giphy.com/dashboard/?create=true to create and app and get API key.
+Sign up for an account or accounts
+or
+Sign in using
 
-Once you have a key, edit jquery/main.js and replace "Your API Key" with your given key. 
+username: ta1
+password: thisiscool
 
-Then open index.html in a browser.
+username: ta2
+password: thisiscool
 
-Tested in Google Chrome.
+The Application works over the web
+
+Youtube link: https://www.youtube.com/watch?v=Bf-JPqRn_Rs&feature=youtu.be
