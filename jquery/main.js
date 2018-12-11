@@ -15,10 +15,12 @@ firebase.auth().onAuthStateChanged(function (user) {
             $("#replyTab").on("click", handleReplyTabClick);
             $("#createConversationBtn").on("click", handleCreateConversationBtnClick)
             $(".closeBtn").on("click", handleCloseClick);
+            $("#howToCloseBtn").on("click", handleHowToCloseBtnClick);
             $("#newConversationBtn").on("click", handleNewConversationClick);
             $("#searchBtn").on("click", handleSearchBtnClick);
             $(".current-user").text(capitalizeFirstLetter(userName) + "'s");
             $(".log-out-bnt").on("click", handleSignOutClick);
+            $(".how-to-bnt").on("click", handleHowToClick);
             $("#searchUsersInput").keyup(filterUsers)
             loadConversations();
             loadTrending();
@@ -232,6 +234,14 @@ firebase.auth().onAuthStateChanged(function (user) {
                 hideTrendingTab();
                 hideFavTab();
                 showReplyTab();
+            }
+
+            function handleHowToClick() {
+                $("#howToWindow").css("display", "block");
+            }
+
+            function handleHowToCloseBtnClick() {
+                $("#howToWindow").css("display", "none");
             }
 
             function handleSignOutClick() {
