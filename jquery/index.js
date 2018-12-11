@@ -57,7 +57,7 @@ $(document).ready(function () {
                 if (errorCode == 'auth/weak-password') {
                     alert('The password is too weak.');
                 } else if (errorCode == 'auth/invalid-email') { 
-                    alert('The username should only contain alphabets.')
+                    alert('The username is invalid.')
                 } else {
                     alert(errorMessage);
                 }
