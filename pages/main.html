@@ -36,7 +36,7 @@
   <div class="topnav">
     <a class="active" href="main.html">GIPHT</a>
     <a class="log-out-bnt" style="float:right" href="../index.html">Logout</a>
-    <a style="float:right" href="#">HowTo</a>
+    <a class="how-to-bnt" style="float:right" href="#">HowTo</a>
   </div>
 
   <!-- Contacts and Messages Sections -->
@@ -90,14 +90,14 @@
         <!-- Pagination -->
         <nav aria-label="Gif navigation">
           <ul class="pagination justify-content-center">
-            <li class="page-item disabled">
-              <div class="page-link" tabindex="-1">Previous</div>
+            <li id="trendLiPrev" class="page-item disabled">
+              <div id="trendPrev" class="page-link" tabindex="-1">Previous</div>
             </li>
             <li class="page-item active">
               <div class="page-link">1 <span class="sr-only">(current)</span></div>
             </li>
-            <li class="page-item">
-              <div class="page-link">Next</div>
+            <li id="trendLiNext" class="page-item">
+              <div id="trendNext" class="page-link">Next</div>
             </li>
           </ul>
         </nav>
@@ -122,6 +122,26 @@
             Search results will appear here...
           </div>
         </div>
+        <!-- Pagination -->
+        <nav aria-label="Gif navigation">
+            <ul class="pagination justify-content-center">
+              <li id="searchLiPrev" class="page-item disabled">
+                <div id="searchPrev" class="page-link" tabindex="-1">Previous</div>
+              </li>
+              <li class="page-item active">
+                <div class="page-link">1 <span class="sr-only">(current)</span></div>
+              </li>
+              <li class="page-item">
+                <div id="searchNext" class="page-link">Next</div>
+              </li>
+            </ul>
+          </nav>
+      </div>
+    </div>
+      
+    <!-- REPLY SECTION -->
+      <div id="replyResultsContainer" style="display: none">
+        <div id="replyResults" class="results custom-scrollbar"></div>
         <!-- Pagination -->
         <nav aria-label="Gif navigation">
           <ul class="pagination justify-content-center">
@@ -203,6 +223,19 @@
       </div>
     </div>
 
+  </div>
+
+  <!-- How To Windows -->
+  <div id="howToWindow" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="closeBtn" id="howToCloseBtn">&times;</span>
+        <h2>Help</h2>
+      </div>
+      <div class="modal-body">
+        Haha xd no help
+      </div>
+    </div>
   </div>
 
 </body>

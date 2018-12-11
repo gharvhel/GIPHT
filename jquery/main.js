@@ -5,7 +5,9 @@ firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
         // User is signed in.
         let email = user.email;
-        let userName = email.split("@")[0]
+        let userName = email.split("@")[0];
+        let trendingOffset = 0;
+        let searchOffset = 0;
         let photoURL = user.photoURL; // We can save profile photo for a user if we have time
 
         $(document).ready(function () {
@@ -15,10 +17,12 @@ firebase.auth().onAuthStateChanged(function (user) {
             $("#replyTab").on("click", handleReplyTabClick);
             $("#createConversationBtn").on("click", handleCreateConversationBtnClick)
             $(".closeBtn").on("click", handleCloseClick);
+            $("#howToCloseBtn").on("click", handleHowToCloseBtnClick);
             $("#newConversationBtn").on("click", handleNewConversationClick);
             $("#searchBtn").on("click", handleSearchBtnClick);
             $(".current-user").text(capitalizeFirstLetter(userName) + "'s");
             $(".log-out-bnt").on("click", handleSignOutClick);
+            $(".how-to-bnt").on("click", handleHowToClick);
             $("#searchUsersInput").keyup(filterUsers)
             $("#sendRandomBtn").on("click", handleSendRandomBtnClick);
             loadConversations();
@@ -79,6 +83,13 @@ firebase.auth().onAuthStateChanged(function (user) {
                     }
                 });
             }
+
+
+            $("#trendPrev").on("click", {off: -5, criteria: "trending"}, addToOffset);
+            $("#trendNext").on("click", {off: 5, criteria: "trending"}, addToOffset);
+            
+            $("#searchPrev").on("click", {off: -5, criteria: "search"}, addToOffset);
+            $("#searchNext").on("click", {off: 5, criteria: "search"}, addToOffset);
 
             function capitalizeFirstLetter(string) {
                 return string.charAt(0).toUpperCase() + string.slice(1);
@@ -180,7 +191,7 @@ firebase.auth().onAuthStateChanged(function (user) {
             function handleSearchBtnClick() {
                 let searchStr = $("#searchInput").val()
                 $.ajax({
-                    url: `https://api.giphy.com/v1/gifs/search?q=${searchStr}&api_key=${apiKey}&limit=5`,
+                    url: `https://api.giphy.com/v1/gifs/search?q=${searchStr}&api_key=${apiKey}&limit=5&offset=${searchOffset}`,
                     type: "GET",
                     beforeSend: function () {
                         console.log("Loading Trending")
@@ -290,6 +301,14 @@ firebase.auth().onAuthStateChanged(function (user) {
                 showReplyTab();
             }
 
+            function handleHowToClick() {
+                $("#howToWindow").css("display", "block");
+            }
+
+            function handleHowToCloseBtnClick() {
+                $("#howToWindow").css("display", "none");
+            }
+
             function handleSignOutClick() {
                 firebase.auth().signOut().then(function () {
                 }, function (error) {
@@ -297,6 +316,30 @@ firebase.auth().onAuthStateChanged(function (user) {
                 });
             }
 
+            function handleUnfavClick(event) {
+                $(`#favResultsImg-${event.data.index}`).remove();
+                let db = firebase.database();
+                let favoritesRef = db.ref(`userList/${userName}/favorites`);
+                favoritesRef.once('value', snapshot => {
+                    if (snapshot.val()) {
+                        let allFavs = snapshot.val();
+                        let length = allFavs.length;
+                        if(length === 2) {
+                            if(event.data.index === 0){
+                                favoritesRef.child(0).set(allFavs[allFavs.length - 1]);
+                            }
+                            favoritesRef.child(allFavs.length - 1).remove();
+                        }
+                        else if(length === 1){
+                            favoritesRef.child(event.data.index).remove();
+                        }
+                        else {
+                            favoritesRef.child(event.data.index).set(allFavs[allFavs.length - 1]);
+                            favoritesRef.child(allFavs.length - 1).remove();
+                        }
+                    }
+                });
+            }
             function handleFavClick(event) {
                 let db = firebase.database();
                 let favoritesRef = db.ref(`userList/${userName}/favorites`);
@@ -512,13 +555,13 @@ firebase.auth().onAuthStateChanged(function (user) {
                                         </div>
                                         <div id=favResultsFavBtn-${i} class="favBtn">
                                             <button type="button" class="btn btn-secondary favButton">
-                                            <span style="font-size:30px;">💗</span>
+                                            <span style="font-size:30px;">❌</span>
                                             </button>
                                         </div>
                                     </div>`
                                 );
                                 $(`#favResultsBtn-${i}`).on("click", handleSendBtnClick);
-                                $(`#favResultsFavBtn-${i}`).on("click", { title: fav.title, imageUrl: fav.url }, handleFavClick);
+                                $(`#favResultsFavBtn-${i}`).on("click", { title: fav.title, imageUrl: fav.url, index: i }, handleUnfavClick);
                             }
                             updateScroll();
                         });
@@ -587,9 +630,42 @@ firebase.auth().onAuthStateChanged(function (user) {
                 });
             }
 
+            function addToOffset(event) {
+                let liPrev = this.parentNode.parentNode.children[0];
+                let num = this.parentNode.parentNode.children[1];
+                let liNext = this.parentNode.parentNode.children[2];
+                let localOffset = 0;
+                if(event.data.criteria === "trending"){
+                    trendingOffset += event.data.off;
+                    localOffset = trendingOffset;
+                }
+                
+                if(event.data.criteria === "search"){
+                    searchOffset += event.data.off;
+                    localOffset = searchOffset;
+                }
+                
+                if(localOffset > 0) {
+                    $(liPrev).removeClass("disabled");
+                }
+                if(localOffset <= 0) {
+                    $(liPrev).addClass("disabled");
+                }
+                
+                if(event.data.criteria === "trending"){
+                    loadTrending();
+                }
+                
+                if(event.data.criteria === "search"){
+                    handleSearchBtnClick();
+                }
+                
+            }
+            
             function loadTrending() {
+                
                 $.ajax({
-                    url: `https://api.giphy.com/v1/gifs/trending?&api_key=${apiKey}&limit=5`,
+                    url: `https://api.giphy.com/v1/gifs/trending?&api_key=${apiKey}&limit=5&offset=${trendingOffset}`,
                     type: "GET",
                     beforeSend: function () {
                         console.log("Loading Trending")
@@ -598,6 +674,7 @@ firebase.auth().onAuthStateChanged(function (user) {
 
                     },
                     success: function (data) {
+                        $("#trendingResults").html("");
                         let results = data.data
                         for (let i = 0; i < results.length; i += 1) {
                             imgUrl = results[i].images.fixed_height.url;

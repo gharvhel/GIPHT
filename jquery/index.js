@@ -56,6 +56,8 @@ $(document).ready(function () {
                 let errorMessage = error.message;
                 if (errorCode == 'auth/weak-password') {
                     alert('The password is too weak.');
+                } else if (errorCode == 'auth/invalid-email') { 
+                    alert('The username should only contain alphabets.')
                 } else {
                     alert(errorMessage);
                 }
@@ -98,9 +100,16 @@ $(document).ready(function () {
         $(".signupbtn").click(handle_sign_up_click);
     }
 
+    function handle_clear_click() {
+        $("#username").val('');
+        $("#psw").val('');
+        $("#psw-repeat").val('');
+    }
+
     $(".signupbtn").on("click", handle_sign_up_click);
     $("#sign_up_tab").on("click", handle_sign_up_tab_click);
     $("#sign_in_tab").on("click", handle_sign_in_tab_click);
+    $(".clearbtn").on("click", handle_clear_click);
 });
 
 
