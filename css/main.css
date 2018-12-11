@@ -243,7 +243,7 @@
 
 .gifThumbnailContainer {
     /* width: 132px; */
-	margin: 5px;
+	margin: 5px 10px;
 	border-radius: 5px;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 	position: relative;
@@ -261,17 +261,35 @@
 	opacity: 0;
 	position: absolute;
 	top: 50%;
-	left: 50%;
+	left: 40%;
 	transform: translate(-50%, -50%);
 	-ms-transform: translate(-50%, -50%);
 	text-align: center;
 }
 
+.favBtn {
+	transition: .5s ease;
+	opacity: 0;
+	position: absolute;
+	top: 50%;
+	left: 80%;
+	z-index: 3;
+	transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	text-align: center;
+}
+
+.favButton {
+	border-radius: 100% !important;
+
+}
+
+
 .gifThumbnailContainer:hover .gif {
 	opacity: 0.3;
   }
   
-.gifThumbnailContainer:hover .sendBtn {
+.gifThumbnailContainer:hover .sendBtn, .gifThumbnailContainer:hover .favBtn  {
 	opacity: 1;
 }
 

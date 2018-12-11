@@ -1,4 +1,5 @@
-const apiKey = "Your Key"
+// const apiKey = "nQcTK789kLqr28S1LFREzk6ElEQ9Seh7"
+const apiKey = "SHHxioh6Lz22riU7N2jNZScib8W5b1Xj"
 // User Authentication
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
@@ -133,7 +134,20 @@ firebase.auth().onAuthStateChanged(function (user) {
                         $("#searchResults").html('');
                         for (let i = 0; i < results.length; i += 1) {
                             imgUrl = results[i].images.fixed_height.url;
-                            $("#searchResults").append(`<div id=searchResultsImg-${i} class="gifThumbnailContainer" ><img class="gif" src="${imgUrl}"><div id=searchResultsBtn-${i} class="sendBtn"><button type="button" class="btn btn-primary">Send</button></div></div>`);
+                            $("#searchResults").append(`
+                                <div id=searchResultsImg-${i} class="gifThumbnailContainer" >
+                                    <img class="gif" src="${imgUrl}">
+                                    <div id=searchResultsBtn-${i} class="sendBtn">
+                                        <button type="button" class="btn btn-primary">
+                                            Sendd
+                                        </button>
+                                    </div>
+                                    <div id=searchResultsFavBtn-${i} class="favBtn">
+                                        <button type="button" class="btn btn-primary">
+                                            Favvvvvvvvv
+                                        </button>
+                                    </div>
+                                </div>`);
                             $(`#searchResultsBtn-${i}`).on("click", handleSendBtnClick);
                         }
                     }
@@ -281,7 +295,6 @@ firebase.auth().onAuthStateChanged(function (user) {
                                     // conversationList.shift();
                                     // reset conversation list div content first
                                     let user = conversationListItem;
-                                    console.log(user)
 
                                     // Append user as active user
                                     if (user != "null") {
@@ -373,14 +386,24 @@ firebase.auth().onAuthStateChanged(function (user) {
                     success: function (data) {
                         let results = data.data
                         for (let i = 0; i < results.length; i += 1) {
+                            console.log(results[i])
                             imgUrl = results[i].images.fixed_height.url;
-                            $("#trendingResults").append(`<div id=trendingResultsImg-${i} class="gifThumbnailContainer" >
-                                                            <img class="gif" src="${imgUrl}">
-                                                            <div id=trendingResultsBtn-${i} class="sendBtn">
-                                                                <button type="button" class="btn btn-primary">Send</button>
-                                                            </div>
-                                                        </div>`);
-                            $(`#trendingResultsBtn-${i}`).on("click", handleSendBtnClick);
+                            $("#trendingResults").append(`
+                                <div id=searchResultsImg-${i} class="gifThumbnailContainer" >
+                                    <img class="gif" src="${imgUrl}">
+                                    <div id=trendingResultsSendBtn-${i} class="sendBtn">
+                                        <button type="button" class="btn btn-primary">
+                                            Send
+                                        </button>
+                                    </div>
+                                    <div id=trendingResultsFavBtn-${i} class="favBtn">
+                                        <button type="button" class="btn btn-secondary favButton">
+                                        <span style="font-size:30px;">💔</span>
+                                        
+                                        </button>
+                                    </div>
+                                </div>`);
+                            $(`#trendingResultsSendBtn-${i}`).on("click", handleSendBtnClick);
                         }
                     }
                 });
