@@ -591,7 +591,6 @@ firebase.auth().onAuthStateChanged(function (user) {
                                 $(`#favResultsBtn-${i}`).on("click", handleSendBtnClick);
                                 $(`#favResultsFavBtn-${i}`).on("click", { title: fav.title, imageUrl: fav.url, index: i }, handleUnfavClick);
                             }
-                            updateScroll();
                         });
                     }
                     else {
