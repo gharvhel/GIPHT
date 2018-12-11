@@ -180,6 +180,8 @@ firebase.auth().onAuthStateChanged(function (user) {
             function updateScroll() {
                 let element = "#messagesSection";
                 $(element).animate({ scrollTop: $(element)[0].scrollHeight * 10 }, 100);
+                let sound = new Audio("../sounds/msg-received.wav");
+                sound.play();
             }
 
             function getRadioValue() {
@@ -373,13 +375,18 @@ firebase.auth().onAuthStateChanged(function (user) {
                             }
                         })
                         if (!favFound) {
+                            let sound = new Audio("../sounds/favorites.wav");
+                            sound.play();
                             let length = currentFavs.length;
                             favoritesRef.child(`${length}`).set({
                                 "title": event.data.title,
                                 "url": event.data.imageUrl
                             });
                         }
-
+                        else{
+                            let sound = new Audio("../sounds/already-fav.wav");
+                            sound.play();
+                        }
                     }
                     else {
                         favoritesRef.set([{
@@ -547,6 +554,7 @@ firebase.auth().onAuthStateChanged(function (user) {
                                 }
                             }
                             updateScroll();
+                            
                         });
                     }
                 });
@@ -652,14 +660,17 @@ firebase.auth().onAuthStateChanged(function (user) {
 
             function addToOffset(event) {
                 let liPrev = this.parentNode.parentNode.children[0];
-                let num = this.parentNode.parentNode.children[1];
+                let num = this.parentNode.parentNode.children[1].children[0].innerHTML;
                 let liNext = this.parentNode.parentNode.children[2];
+                
                 let localOffset = 0;
                 if(event.data.criteria === "trending"){
                     trendingOffset += event.data.off;
                     localOffset = trendingOffset;
                 }
-                
+                let newNum = (localOffset/5) + 1;
+                console.log(newNum);
+                this.parentNode.parentNode.children[1].children[0].innerHTML = `${newNum}<span class="sr-only">(current)</span>`
                 if(event.data.criteria === "search"){
                     searchOffset += event.data.off;
                     localOffset = searchOffset;
