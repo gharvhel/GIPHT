@@ -165,6 +165,12 @@
 }
 
 
+/* Conversation List */
+
+#conversationList button:not(.active):hover {
+	background-color: #ddd;
+}
+
 /* New Conversation Window */
 /* The Modal (background) */
 .modal {
